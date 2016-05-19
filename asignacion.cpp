@@ -2,28 +2,39 @@
 
 Asignacion::Asignacion()
 {
-    xcodigo = "codigo";
+    xcodigo = "";
     xdescripcion = "descripcion";
     xforma = "forma";
     xvalor = 0;
 }
 
-Asignacion::Asignacion(QString codigo, QString descripcion, QString forma, double valor)
+Asignacion::Asignacion(QString codigo, QString descripcion, QString forma, double valor, QString formula, bool prima, bool activo)
 {
-     xcodigo = codigo;
-     xdescripcion = descripcion;
-     xforma = forma;
-     xvalor = valor;
+    xcodigo = codigo;
+    xdescripcion = descripcion;
+    xforma = forma;
+    xvalor = valor;
+    xformula = formula;
+    xprima = prima;
+    xactivo = activo;
+
+}
+
+Asignacion::Asignacion(QString codigo,QString descripcion,QString forma,double valor, QString formula,bool prima, bool activo,QString fecha)
+{
+    xcodigo = codigo;
+    xdescripcion = descripcion;
+    xforma = forma;
+    xvalor = valor;
+    xformula = formula;
+    xprima = prima;
+    xactivo = activo;
+    xfecha = fecha;
 }
 
 QString Asignacion::getCodigo() const
 {
     return xcodigo;
-}
-
-void Asignacion::setCodigo(const QString &value)
-{
-    xcodigo = value;
 }
 
 QString Asignacion::getDescripcion() const
@@ -108,15 +119,38 @@ void Asignacion::setValor(double value)
 {
     xvalor = value;
 }
-// Deshabilitado
-/*
-QStringList Asignacion::getCodCampo() const
+
+QString Asignacion::getFecha() const
 {
-    return xcodCampo;
+    return xfecha;
 }
 
-void Asignacion::setCodCampo(const QStringList &value)
+bool Asignacion::isActivo() const
 {
-    xcodCampo = value;
+    return xactivo;
 }
-*/
+
+void Asignacion::setActivo(bool value)
+{
+    xactivo = value;
+}
+
+bool Asignacion::hasPrima() const
+{
+    return xprima;
+}
+
+void Asignacion::setPrima(bool value)
+{
+    xprima = value;
+}
+
+QString Asignacion::getFormula() const
+{
+    return xformula;
+}
+
+void Asignacion::setFormula(const QString &value)
+{
+    xformula = value;
+}

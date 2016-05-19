@@ -8,6 +8,8 @@
 #include <QMessageBox>
 
 #include "deduccionmodel.h"
+#include "coduppercasevalidator.h"
+#include "uppercasevalidator.h"
 
 namespace Ui {
 class DeduccionWidget;
@@ -24,6 +26,12 @@ public:
     explicit DeduccionWidget(QWidget *parent = 0);
     ~DeduccionWidget();
 
+
+    CodUpperCaseValidator codigoValidador;
+    UpperCaseValidator upperCaseValidador;
+
+
+
 private slots:
 
     void deduccionTableViewSelectionChange();
@@ -36,18 +44,22 @@ private slots:
 
     void on_FormaComboBox_currentIndexChanged(int index);
 
+    void on_busquedaLineEdit_textChanged(const QString &arg1);
+
+    void on_codigoLineEdit_editingFinished();
+
 private:
     Ui::DeduccionWidget *ui;
 
     State state;
     DeduccionModel* model;
     QSqlQueryModel* tableModel;
+    QSqlQueryModel* formaModel;
 
     Deduccion deduccion;
 
     void prepareWidget();
     void setState(State xstate);
-    void setValidators();
     void stateAgregar();
     void stateModificar();
     void stateInicial();
@@ -58,11 +70,16 @@ private:
     void eliminarDeduccion();
 
     void updateTableView(QString str="");
-
+    void updateFormaComboBox(QString str="");
+    void updateFormulaCombobox(QString str="");
     void cargarDeduccion(Deduccion deduccion);
     Deduccion descargarDeduccion();
 
-    void updateValorDoubleSpinBoxParameters(int index);
+    void updateFormaParameters();
+
+    void setValidadores();
+    bool validarDatos();
+
 };
 
 #endif // DEDUCCIONWIDGET_H

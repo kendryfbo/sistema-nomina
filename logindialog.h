@@ -19,6 +19,7 @@ public:
     explicit LoginDialog(QWidget *parent = 0);
     ~LoginDialog();
 
+    Usuario getUser();
 
 private slots:
 
@@ -32,6 +33,7 @@ private:
     Ui::LoginDialog *ui;
 
     LoginModel* model;
+    Usuario user;
 
     void prepareWidget();
 

@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>DeduccionWidget</class>
  <widget class="QWidget" name="DeduccionWidget">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -35,7 +38,7 @@
              </property>
              <item>
               <property name="text">
-               <string>Descripcion:</string>
+               <string>Descripción:</string>
               </property>
              </item>
              <item>
@@ -97,11 +100,14 @@
         </layout>
        </item>
        <item>
-        <widget class="QTabWidget" name="tabWidget">
+        <widget class="QTabWidget" name="DeduccionTabWidget">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="tab">
+         <widget class="QWidget" name="deduccionDatosTab">
           <attribute name="title">
            <string>Deducción</string>
           </attribute>
@@ -123,7 +129,7 @@
                 <item>
                  <widget class="QLabel" name="label">
                   <property name="text">
-                   <string>Codigo :</string>
+                   <string>Código :</string>
                   </property>
                  </widget>
                 </item>
@@ -142,7 +148,7 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>AAAAAAAAAA</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -164,7 +170,7 @@
                   <item>
                    <widget class="QLabel" name="label_5">
                     <property name="text">
-                     <string>Fecha de Creacion:</string>
+                     <string>Fecha de Creación:</string>
                     </property>
                    </widget>
                   </item>
@@ -184,7 +190,7 @@
                 <item>
                  <widget class="QLabel" name="label_2">
                   <property name="text">
-                   <string>Descripcion:</string>
+                   <string>Descripción:</string>
                   </property>
                  </widget>
                 </item>
@@ -227,7 +233,7 @@
                   <item>
                    <widget class="QLabel" name="label_3">
                     <property name="text">
-                     <string>Forma de Deduccion:</string>
+                     <string>Forma de Deducción:</string>
                     </property>
                    </widget>
                   </item>
@@ -235,7 +241,7 @@
                    <widget class="QComboBox" name="FormaComboBox">
                     <property name="minimumSize">
                      <size>
-                      <width>110</width>
+                      <width>120</width>
                       <height>0</height>
                      </size>
                     </property>
@@ -248,16 +254,6 @@
                     <property name="sizeAdjustPolicy">
                      <enum>QComboBox::AdjustToContents</enum>
                     </property>
-                    <item>
-                     <property name="text">
-                      <string>Porcentaje Salario</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Monto</string>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                  </layout>
@@ -265,34 +261,22 @@
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
                   <item>
-                   <widget class="QLabel" name="label_4">
+                   <widget class="QLabel" name="formulaLabel">
                     <property name="text">
-                     <string>Valor de la deduccion :</string>
+                     <string>Fórmula :</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="valorDoubleSpinBox">
+                   <widget class="QComboBox" name="formulaComboBox">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>100</width>
+                      <width>120</width>
                       <height>0</height>
                      </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>100</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                    <property name="maximum">
-                     <double>999999999.990000009536743</double>
-                    </property>
-                    <property name="value">
-                     <double>1.000000000000000</double>
                     </property>
                    </widget>
                   </item>
@@ -315,6 +299,38 @@
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <widget class="QLabel" name="label_4">
+                  <property name="text">
+                   <string>Valor de la deducción :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="valorDoubleSpinBox">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>100</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                  <property name="maximum">
+                   <double>999999999.990000009536743</double>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
                 <item>
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
@@ -361,11 +377,6 @@
             </widget>
            </item>
           </layout>
-         </widget>
-         <widget class="QWidget" name="tab_2">
-          <attribute name="title">
-           <string>Asignar Deduccion Auto.</string>
-          </attribute>
          </widget>
         </widget>
        </item>

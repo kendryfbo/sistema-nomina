@@ -39,7 +39,7 @@ void connDB::connClose()
     db.close();
     db = QSqlDatabase();
     db.removeDatabase(connName);
-    qDebug() << "conexion a la base de datos fue CERRADA";
+    //qDebug() << "conexion a la base de datos fue CERRADA";
 }
 // ABRE LA CONEXION CON LA BASE DE DATOS
 bool connDB::connOpen()

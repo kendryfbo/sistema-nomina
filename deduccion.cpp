@@ -2,27 +2,29 @@
 
 Deduccion::Deduccion()
 {
-    xcodigo = "DEFAULT";
+    xcodigo = "";
     xdescripcion = "descripcion";
     xforma = "forma";
     xvalor = 0;
 }
 
-Deduccion::Deduccion(QString codigo, QString descripcion, QString forma, double valor, bool activo)
+Deduccion::Deduccion(QString codigo, QString descripcion, QString forma, double valor, QString formula, bool activo)
 {
      xcodigo = codigo;
      xdescripcion = descripcion;
      xforma = forma;
      xvalor = valor;
+     xformula = formula;
      xactivo = activo;
 }
 
-Deduccion::Deduccion(QString codigo, QString descripcion, QString forma, double valor, QString fecha, bool activo)
+Deduccion::Deduccion(QString codigo, QString descripcion, QString forma, double valor, QString formula, QString fecha, bool activo)
 {
     xcodigo = codigo;
     xdescripcion = descripcion;
     xforma = forma;
     xvalor = valor;
+    xformula = formula;
     xfecha = fecha;
     xactivo = activo;
 }
@@ -30,11 +32,6 @@ Deduccion::Deduccion(QString codigo, QString descripcion, QString forma, double 
 QString Deduccion::getCodigo() const
 {
     return xcodigo;
-}
-
-void Deduccion::setCodigo(const QString &value)
-{
-    xcodigo = value;
 }
 
 QString Deduccion::getDescripcion() const
@@ -46,39 +43,6 @@ void Deduccion::setDescripcion(const QString &value)
 {
     xdescripcion = value;
 }
-
-// Deshabilitado
-/*
-QString Deduccion::getTipo() const
-{
-    return xtipo;
-}
-
-void Deduccion::setTipo(const QString &value)
-{
-    xtipo = value;
-}
-
-QString Deduccion::tipoToString(Deduccion::Tipo tipo)
-{
-    if (tipo == Tipo::fijo)
-        return "FIJO";
-    if (tipo == Tipo::opcional)
-        return "OPCIONAL";
-    else
-        return "OPCIONAL";
-}
-
-Deduccion::Tipo Deduccion::stringToTipo(QString tipo)
-{
-    if (tipo == "FIJO")
-        return Tipo::fijo;
-    if (tipo == "OPCIONAL")
-        return Tipo::opcional;
-    else
-        return Tipo::opcional;
-}
-*/
 
 QString Deduccion::getForma() const
 {
@@ -156,4 +120,14 @@ QString Deduccion::toString()
             QString::number(getValor());
 
     return str;
+}
+
+QString Deduccion::getFormula() const
+{
+    return xformula;
+}
+
+void Deduccion::setFormula(const QString &value)
+{
+    xformula = value;
 }

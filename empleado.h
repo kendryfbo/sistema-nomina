@@ -1,36 +1,36 @@
 #ifndef EMPLEADO_H
 #define EMPLEADO_H
 
+#include <QtCore>
 #include <QString>
 
+#include "clasificacion.h"
 
 class Empleado
 {
 public:
 
-    enum class Contrato {determinado,indeterminado};
-
-    struct AreaDeTrabajo {
-        QString codigo;
-        QString Descripcion;
-    };
-    struct Clasificacion {
-        QString codigo;
-        QString Descripcion;
-    };
-    struct Status {
-        QString codigo;
-        QString descripcion;
-    };
-
     Empleado();
+
     Empleado(QString cedula, QString nombres, QString apellidos, QString rif,
     QString fechaNac, QString lugarNac, QString email, QString edoCivil, int numHijos,
     QString direccion, QString tlf1, QString tlf2, QString nivelAcad, QString espec,
     bool nivelAcadSup, QString titulo);
 
+    Empleado(QString cedula, QString nombres, QString apellidos, QString rif,
+    QString fechaNac, QString lugarNac, QString email, QString edoCivil, int numHijos,
+    QString direccion, QString tlf1, QString tlf2, QString nivelAcad, QString espec,
+    bool nivelAcadSup, QString titulo, QString fechaIngrEduc, QString fechaIngrEducPriv,
+    QString fechaIng, QString status, QString area, Clasificacion clasificacion, QString nivel, int  horas,QString contrato);
+
+    Empleado(QString cedula, QString nombres, QString apellidos, QString rif,
+    QString fechaNac, QString lugarNac, QString email, QString edoCivil, int numHijos,
+    QString direccion, QString tlf1, QString tlf2, QString nivelAcad, QString espec,
+    bool nivelAcadSup, QString titulo, QString fechaIngrEduc, QString fechaIngrEducPriv,
+    QString fechaIng, QString status, QString area, Clasificacion clasificacion, QString nivel, int horas,
+    double salarioHora, double salarioDia, double salarioSemana, double salarioMes, QString contrato, int antiguedad);
+
     QString getCedula() const;
-    void setCedula(const QString &value);
 
     QString getNombres() const;
     void setNombres(const QString &value);
@@ -77,8 +77,8 @@ public:
     QString getTitulo() const;
     void setTitulo(const QString &value);
 
-    AreaDeTrabajo getArea() const;
-    void setArea(const AreaDeTrabajo &value);
+    QString getArea() const;
+    void setArea(const QString &value);
 
     Clasificacion getClasificacion() const;
     void setClasificacion(const Clasificacion &value);
@@ -90,13 +90,7 @@ public:
     void setHoras(int value);
 
     QString getContrato() const;
-    void setContrato(Contrato &value);
-
-
-
-
-    QString contratoToString( Contrato &value);
-    Contrato stringToContrato( QString &value);
+    void setContrato(const QString &value);
 
     QString getFechaIngrEduc() const;
     void setFechaIngrEduc(const QString &value);
@@ -107,10 +101,19 @@ public:
     QString getFechaIng() const;
     void setFechaIng(const QString &value);
 
-    Status getStatus() const;
-    void setStatus(const Status &value);
+    QString getStatus() const;
+    void setStatus(const QString &value);
 
     int getAntiguedad() const;
+    void setAntiguedad(int value);
+
+    double getSalarioHora() const;
+
+    double getSalarioDia() const;
+
+    double getSalarioSemana() const;
+
+    double getSalarioMes() const;
 
 private:
 
@@ -131,16 +134,20 @@ private:
     bool xNivelAcadSup; // Nivel academico superior
     QString xTitulo;
 
-// DATOS ACADEMICOS
-    AreaDeTrabajo xArea;
-    Clasificacion xClasificacion;
-    QString xNivel;
-    int  xHoras;
-    QString xContrato;
+// DATOS LABORALES
     QString xFechaIngrEduc;
     QString xFechaIngrEducPriv;
     QString xFechaIng;
-    Status xStatus;
+    QString xStatus;
+    QString xArea;
+    Clasificacion xClasificacion;
+    QString xNivel;
+    int  xHoras;
+    double xSalarioHora;
+    double xSalarioDia;
+    double xSalarioSemana;
+    double xSalarioMes;
+    QString xContrato;
     int xAntiguedad;
 
 };

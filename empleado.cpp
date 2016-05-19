@@ -2,7 +2,7 @@
 
 Empleado::Empleado()
 {
-    xCedula = "cedula";
+    xCedula = "19017070";
     xNombres = "nombres";
     xApellidos = "apellidos";
     xRif = "rif";
@@ -18,28 +18,26 @@ Empleado::Empleado()
     xEspec = "espec";
     xNivelAcadSup = false;
     xTitulo = "titulo";
-    AreaDeTrabajo area;
-    area.codigo = "DEFAULT";
-    area.Descripcion = "DEFAULT";
-    Clasificacion clasificacion;
-    clasificacion.codigo = "DEFAULT";
-    clasificacion.Descripcion = "DEFAULT";
-    xArea = area;
-    xClasificacion = clasificacion;
+    xArea =  "area";
+    xClasificacion = Clasificacion();
     xNivel = "DEFAULT";
     xHoras = 0;
     xContrato = "DEFAULT";
     xFechaIngrEduc = "2016-10-10";
     xFechaIngrEducPriv = "2016-10-10";
     xFechaIng = "2016-10-10";
-    Status status;
-    status.codigo = "DEFAULT";
-    status.descripcion = "DEFAULT";
-    xStatus = status;
+    xStatus = "status";
     xAntiguedad = 1;
+    xSalarioHora = 119.75;
+    xSalarioDia = 718.5;
+    xSalarioSemana =5029.5;
+    xSalarioMes = 20118;
+
 }
 
-Empleado::Empleado(QString cedula, QString nombres, QString apellidos, QString rif, QString fechaNac, QString lugarNac, QString email, QString edoCivil, int numHijos, QString direccion, QString tlf1, QString tlf2, QString nivelAcad, QString espec, bool nivelAcadSup, QString titulo)
+Empleado::Empleado(QString cedula, QString nombres, QString apellidos, QString rif, QString fechaNac,
+                   QString lugarNac, QString email, QString edoCivil, int numHijos, QString direccion, QString tlf1,
+                   QString tlf2, QString nivelAcad, QString espec, bool nivelAcadSup, QString titulo)
 {
      xCedula = cedula;
      xNombres = nombres;
@@ -59,14 +57,79 @@ Empleado::Empleado(QString cedula, QString nombres, QString apellidos, QString r
      xTitulo = titulo;
 }
 
+Empleado::Empleado(QString cedula, QString nombres, QString apellidos, QString rif, QString fechaNac,
+                   QString lugarNac, QString email, QString edoCivil, int numHijos, QString direccion, QString tlf1,
+                   QString tlf2, QString nivelAcad, QString espec, bool nivelAcadSup, QString titulo, QString fechaIngrEduc,
+                   QString fechaIngrEducPriv, QString fechaIng, QString status, QString area, Clasificacion clasificacion, QString nivel, int horas, QString contrato)
+{
+    xCedula = cedula;
+    xNombres = nombres;
+    xApellidos = apellidos;
+    xRif = rif;
+    xFechaNac = fechaNac;
+    xLugarNac = lugarNac;
+    xEmail = email;
+    xEdoCivil = edoCivil;
+    xNumHijos = numHijos;
+    xDireccion = direccion;
+    xTlf1= tlf1;
+    xTlf2 =tlf2;
+    xNivelAcad = nivelAcad;
+    xEspec = espec;
+    xNivelAcadSup = nivelAcadSup;
+    xTitulo = titulo;
+    xFechaIngrEduc = fechaIngrEduc;
+    xFechaIngrEducPriv = fechaIngrEducPriv;
+    xFechaIng = fechaIng;
+    xStatus = status;
+    xArea = area;
+    xClasificacion = clasificacion;
+    xNivel = nivel;
+    xHoras = horas;
+    xContrato = contrato;
+}
+
+Empleado::Empleado(QString cedula, QString nombres, QString apellidos, QString rif, QString fechaNac,
+                   QString lugarNac, QString email, QString edoCivil, int numHijos, QString direccion, QString tlf1,
+                   QString tlf2, QString nivelAcad, QString espec, bool nivelAcadSup, QString titulo, QString fechaIngrEduc,
+                   QString fechaIngrEducPriv, QString fechaIng, QString status, QString area, Clasificacion clasificacion, QString nivel,
+                   int horas, double salarioHora, double salarioDia, double salarioSemana, double salarioMes, QString contrato, int antiguedad)
+{
+    xCedula = cedula;
+    xNombres = nombres;
+    xApellidos = apellidos;
+    xRif = rif;
+    xFechaNac = fechaNac;
+    xLugarNac = lugarNac;
+    xEmail = email;
+    xEdoCivil = edoCivil;
+    xNumHijos = numHijos;
+    xDireccion = direccion;
+    xTlf1= tlf1;
+    xTlf2 =tlf2;
+    xNivelAcad = nivelAcad;
+    xEspec = espec;
+    xNivelAcadSup = nivelAcadSup;
+    xTitulo = titulo;
+    xFechaIngrEduc = fechaIngrEduc;
+    xFechaIngrEducPriv = fechaIngrEducPriv;
+    xFechaIng = fechaIng;
+    xStatus = status;
+    xArea = area;
+    xClasificacion = clasificacion;
+    xNivel = nivel;
+    xHoras = horas;
+    xSalarioHora = salarioHora;
+    xSalarioDia = salarioDia;
+    xSalarioSemana = salarioSemana;
+    xSalarioMes = salarioMes;
+    xContrato = contrato;
+    xAntiguedad = antiguedad;
+}
+
 QString Empleado::getCedula() const
 {
     return xCedula;
-}
-
-void Empleado::setCedula(const QString &value)
-{
-    xCedula = value;
 }
 
 QString Empleado::getNombres() const
@@ -219,17 +282,17 @@ void Empleado::setTitulo(const QString &value)
     xTitulo = value;
 }
 
-Empleado::AreaDeTrabajo Empleado::getArea() const
+QString Empleado::getArea() const
 {
     return xArea;
 }
 
-void Empleado::setArea(const AreaDeTrabajo &value)
+void Empleado::setArea(const QString &value)
 {
     xArea = value;
 }
 
-Empleado::Clasificacion Empleado::getClasificacion() const
+Clasificacion Empleado::getClasificacion() const
 {
     return xClasificacion;
 }
@@ -263,27 +326,9 @@ QString Empleado::getContrato() const
 {
     return xContrato;
 }
-void Empleado::setContrato(Contrato &value)
+void Empleado::setContrato(const QString &value)
 {
-    xContrato = contratoToString(value);
-}
-QString Empleado::contratoToString(Empleado::Contrato &value)
-{
-    if (value == Contrato::determinado)
-        return "Determinado";
-    if (value == Contrato::indeterminado)
-        return "Indeterminado";
-
-    else return "Indeterminado";
-}
-Empleado::Contrato Empleado::stringToContrato(QString &value)
-{
-    if (value == "Determinado")
-        return Contrato::determinado;
-    if (value == "Indeterminado")
-        return Contrato::indeterminado;
-
-    else return Contrato::indeterminado;
+    xContrato = value;
 }
 
 QString Empleado::getFechaIngrEduc() const
@@ -314,11 +359,11 @@ void Empleado::setFechaIng(const QString &value)
     xFechaIng = value;
 }
 
-Empleado::Status Empleado::getStatus() const
+QString Empleado::getStatus() const
 {
     return xStatus;
 }
-void Empleado::setStatus(const Status &value)
+void Empleado::setStatus(const QString &value)
 {
     xStatus = value;
 }
@@ -326,4 +371,29 @@ void Empleado::setStatus(const Status &value)
 int Empleado::getAntiguedad() const
 {
     return xAntiguedad;
+}
+
+void Empleado::setAntiguedad(int value)
+{
+    xAntiguedad = value;
+}
+
+double Empleado::getSalarioHora() const
+{
+    return xSalarioHora;
+}
+
+double Empleado::getSalarioDia() const
+{
+    return xSalarioDia;
+}
+
+double Empleado::getSalarioSemana() const
+{
+    return xSalarioSemana;
+}
+
+double Empleado::getSalarioMes() const
+{
+    return xSalarioMes;
 }

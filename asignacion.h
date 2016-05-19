@@ -12,22 +12,13 @@ class Asignacion
 public:
 
     Asignacion();
-    Asignacion(QString codigo,QString descripcion,QString forma,double valor);
-
+    Asignacion(QString codigo, QString descripcion, QString forma, double valor, QString formula,bool prima, bool activo);
+    Asignacion(QString codigo,QString descripcion,QString forma,double valor, QString formula,bool prima, bool activo,QString fecha);
 
     QString getCodigo() const;
-    void setCodigo(const QString &value);
 
     QString getDescripcion() const;
     void setDescripcion(const QString &value);
-
-    // Deshabilitado
-    /*
-    QString getTipo() const;
-    void setTipo(const QString &value);
-    QString tipoToString(Tipo tipo);
-    Tipo stringToTipo(QString tipo);
-    */
 
     QString getForma() const;
     void setForma(const QString &value);
@@ -37,18 +28,25 @@ public:
     double getValor() const;
     void setValor(double value);
 
-    // Deshabilitado
-    /*
-    QStringList getCodCampo() const;
-    void setCodCampo(const QStringList &value);
-    */
+    QString getFormula() const;
+    void setFormula(const QString &value);
+
+    QString getFecha() const;
+
+    bool isActivo() const;
+    void setActivo(bool value);
+
+    bool hasPrima() const;
+    void setPrima(bool value);
+
 private:
     QString xcodigo;
     QString xdescripcion;
-    // QString xtipo;
     QString xforma;
     double xvalor;
-    // QStringList xcodCampo;
+    QString xformula;
+    QString xfecha;
+    bool xprima;
+    bool xactivo;
 };
-
 #endif // ASIGNACION_H

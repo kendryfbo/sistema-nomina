@@ -17,7 +17,6 @@ Model::Model(QString connName, QString hostName, QString dbName, QString dbUserN
 
 Model::~Model()
 {
-    delete query;
     conexion.connClose();
 }
 // CONECTAR A LA BASE DE DATOS

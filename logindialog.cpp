@@ -6,14 +6,12 @@ LoginDialog::LoginDialog(QWidget *parent) :
     ui(new Ui::LoginDialog)
 {
     ui->setupUi(this);
-    this->setAttribute(Qt::WA_DeleteOnClose,true);
-
     model = new LoginModel("login","127.0.0.1","nomina","root","19017070",3306);
 
     if (!model->isConected())
     {
         QMessageBox::critical(this,"ERROR CRITICO",model->getStatusMessage(),QMessageBox::Ok);
-        this->close();
+        reject();
     } else ui->statusLabel->setText(model->getStatusMessage());
 
     prepareWidget();
@@ -23,6 +21,11 @@ LoginDialog::~LoginDialog()
 {
     delete model;
     delete ui;
+}
+
+Usuario LoginDialog::getUser()
+{
+    return user;
 }
 
 void LoginDialog::prepareWidget()
@@ -69,7 +72,11 @@ void LoginDialog::on_userLineEdit_editingFinished()
 
 void LoginDialog::on_pushButton_clicked()
 {
-    passwordMatch();
+    if (passwordMatch())
+    {
+        user = Usuario(model->findUsuario(ui->userLineEdit->text()));
+        this->accept();
+    }
 }
 
 void LoginDialog::on_pushButton_2_clicked()

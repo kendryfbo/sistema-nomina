@@ -19,7 +19,7 @@ public:
     bool UpdateUsuario(Usuario usuario);
     bool deleteUsuario(QString user);
 
-    Usuario findUsuario(QString str,Campo campo= Campo::user,bool ini=true,bool fin=true);
+    Usuario findUsuario(QString user);
     QSqlQuery findUsuarios(QString str="",Campo campo= Campo::user,bool ini=true,bool fin=true);
     bool existUsuario(QString user);
     bool matchUserPassword(QString user,QString password);
@@ -28,6 +28,8 @@ public:
     bool insertPerfil(Usuario::Perfil perfil);
     bool updatePerfil(Usuario::Perfil perfil);
     bool deletePerfil(Usuario::Perfil perfil);
+
+    Usuario::Perfil findPerfilDeUsuario(QString codigo);
 
 
 };

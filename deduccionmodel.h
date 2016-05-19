@@ -14,6 +14,7 @@ public:
 
     enum class Campo{codigo,descripcion};
 
+    DeduccionModel(connDB conn);
     DeduccionModel(QString hostName,QString dbName,QString dbUserName,QString dbUserPassword,int dbPort);
     DeduccionModel(QString connName,QString hostName,QString dbName,QString dbUserName,QString dbUserPassword,int dbPort);
 
@@ -23,8 +24,13 @@ public:
     bool updateDeduccion(Deduccion deduccion);
     bool DeleteDeduccion(QString  codigo);
 
+    bool deduccionExist(QString codigo);
     Deduccion findDeduccion(QString codigo);
-    QSqlQuery findDeducciones(QString str = "", Campo campo = Campo::descripcion,bool ini = true ,bool fin = true);
+    QSqlQuery findDeducciones(QString str = "", bool activo=true, Campo campo = Campo::descripcion,bool ini = true ,bool fin = true);
+
+    QSqlQuery findForma(QString str = "", bool activo=true, Campo campo = Campo::descripcion, bool ini = true , bool fin = true);
+
+    QStringList findFormulas(QString str = "", bool activo=true, Campo campo = Campo::descripcion, bool ini = true , bool fin = true);
 
 };
 

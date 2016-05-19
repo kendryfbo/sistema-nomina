@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/Reportes">
+        <file>Reportes/ReciboDePago.lrxml</file>
+        <file>Reportes/RecibosDePago.lrxml</file>
+        <file>Reportes/ReporteNomina.lrxml</file>
+    </qresource>
+</RCC>

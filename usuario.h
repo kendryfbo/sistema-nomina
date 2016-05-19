@@ -10,20 +10,87 @@ public:
     struct Perfil {
 
     public:
+        Perfil(){}
+        Perfil(QString codigo,QString descripcion,bool empleados,bool deduccion,bool asignacion,bool nomina,bool reportes,bool consultas,bool usuarios,bool perfiles,bool activo)
+        {
+            xcodigo = codigo;
+            xdescripcion = descripcion;
+            xempleados = empleados;
+            xdeduccion = deduccion;
+            xasignacion = asignacion;
+            xnomina = nomina;
+            xreportes = reportes;
+            xconsultas = consultas;
+            xusuarios = usuarios;
+            xperfiles =perfiles;
+            xactivo = activo;
+        }
+        Perfil(QString codigo,QString descripcion,bool empleados,bool deduccion,bool asignacion,bool nomina,bool reportes,bool consultas,bool usuarios,bool perfiles,bool activo,QString fecha)
+        {
+            xcodigo = codigo;
+            xdescripcion = descripcion;
+            xempleados = empleados;
+            xdeduccion = deduccion;
+            xasignacion = asignacion;
+            xnomina = nomina;
+            xreportes = reportes;
+            xconsultas = consultas;
+            xusuarios = usuarios;
+            xperfiles =perfiles;
+            xactivo = activo;
+            xfecha = fecha;
+        }
+
+        QString getCodigo(){
+            return xcodigo;
+        }
+        QString getDescripcion(){
+             return xdescripcion;
+         }
+        bool hasEmpleados(){
+             return xempleados;
+         }
+        bool hasDeduccion(){
+             return xdeduccion;
+         }
+        bool hasAsignacion(){
+             return xasignacion;
+         }
+        bool hasNomina(){
+             return xnomina;
+         }
+        bool hasReportes(){
+             return xreportes;
+         }
+        bool hasConsultas(){
+             return xconsultas;
+         }
+        bool hasUsuarios(){
+             return xusuarios;
+         }
+        bool hasPerfiles(){
+             return xperfiles;
+         }
+        bool isActivo(){
+             return xactivo;
+         }
+        QString getFecha(){
+             return xfecha;
+         }
 
     private:
-        QString codigo;
-        QString descripcion;
-        bool empleados;
-        bool deduccion;
-        bool asignacion;
-        bool nomina;
-        bool reportes;
-        bool consultas;
-        bool usuarios;
-        bool perfiles;
-        bool activo;
-        QString fecha;
+        QString xcodigo;
+        QString xdescripcion;
+        bool xempleados;
+        bool xdeduccion;
+        bool xasignacion;
+        bool xnomina;
+        bool xreportes;
+        bool xconsultas;
+        bool xusuarios;
+        bool xperfiles;
+        bool xactivo;
+        QString xfecha;
     };
 
     Usuario();
@@ -58,7 +125,7 @@ private:
     QString xpassword;
     QString xnombres;
     QString xapellidos;
-    Perfil xperfil;
+    Usuario::Perfil xperfil;
     bool xactivo;
     QString xfecha;
 
