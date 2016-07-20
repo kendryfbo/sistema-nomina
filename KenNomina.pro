@@ -49,7 +49,9 @@ SOURCES += main.cpp\
     anticipowidget.cpp \
     anticipodialog.cpp \
     anticipomodel.cpp \
-    anticipolistadialog.cpp
+    anticipolistadialog.cpp \
+    vacacion.cpp \
+    vacacionmodel.cpp
 
 HEADERS  += mainwindow.h \
     usuario.h \
@@ -88,7 +90,9 @@ HEADERS  += mainwindow.h \
     anticipowidget.h \
     anticipodialog.h \
     anticipomodel.h \
-    anticipolistadialog.h
+    anticipolistadialog.h \
+    vacacion.h \
+    vacacionmodel.h
 
 FORMS    += mainwindow.ui \
     nominawidget.ui \
