@@ -18,31 +18,36 @@ public:
     ~VacacionModel();
 
     // Generation of all employees vacations in selected area from vacation
-    generateVacacion(Vacacion vacacion,int diasBono,int diasAjuste,QStringList codDeducciones);
+    generateVacacion(Vacacion vacacion,int diasBono,int diasAjuste,QStringList codDeducciones); // falta por implementar
 
     // Process of all employees vacations from the corresponding vacacion cargada num
-    processVacacion(int vacacionNum);
+    processVacacion(int vacacionNum); // falta por implementar
 
 
 private:
 
     // Insert, Update and Delete from table 'vacacioncargada'
-    insertVacacionCargada(Vacacion vacacion);
-    updateVacacionCargada(Vacacion vacacion);
-    deleteVacacionCargada(int vacacionNum);
+    insertVacacionCargada(Vacacion vacacion); // falta por implementar
+    updateVacacionCargada(Vacacion vacacion); // falta por implementar
+    deleteVacacionCargada(int vacacionNum); // falta por implementar
 
     // Insert, Update and Delete from table 'vacaciondetalle'
-    insertVacacionDetalleCargada(int vacacionNum,QString empleadoCed,int diasBono,int diasAjuste);
-    updateVacacionDetalleCargada(int vacacionNum,QString empleadoCed,int diasBono,int diasAjuste);
+    insertVacacionDetalleCargada(int vacacionNum,QString empleadoCed,int diasBono,int diasAjuste); // falta por implementar
+    updateVacacionDetalleCargada(int vacacionNum,QString empleadoCed,int diasBono,int diasAjuste); // falta por implementar
     /* Para futuras mejoras en donde se puedan eliminar empleados de las vacaciones cargadas
     * deleteVacacionDetalleCargada();
     */
 
     // Insert, Update and Delete from table 'vacaciondetallededuccion'
-    insertdetalleDeduccionCargada(Vacacion vacacion);
-    updatedetalleDeduccionCargada(Vacacion vacacion);
-    deletedetalleDeduccionCargada(int vacacionNum);
+    insertdetalleDeduccionCargada(); // falta por implementar
+    updatedetalleDeduccionCargada(); // falta por implementar
+    deletedetalleDeduccionCargada();  // falta por implementar
 
+    // Obtener Montos de bono Vacacional y Ajuste Salarial
+    double getBonoVacacional(int vacacionNum,QString empleadoCed); // falta por implementar
+    double getajusteSalario(int vacacionNum,QString empleadoCed); // falta por implementar
+
+    double getBonoIntegral(int vacacionNum,QString empleadoCed);
 };
 
 #endif // VACACIONMODEL_H
