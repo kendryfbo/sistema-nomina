@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>AreaWidget</class>
  <widget class="QWidget" name="AreaWidget">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -324,6 +327,9 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="maximum">
+               <double>99999999.989999994635582</double>
               </property>
              </widget>
             </item>

@@ -650,6 +650,9 @@
               <property name="suffix">
                <string> Bs</string>
               </property>
+              <property name="minimum">
+               <double>-9999999.000000000000000</double>
+              </property>
               <property name="maximum">
                <double>9999999.000000000000000</double>
               </property>
@@ -791,6 +794,13 @@
    <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_11">
      <item>
+      <widget class="QPushButton" name="anticipoPushButton">
+       <property name="text">
+        <string>Cargar Anticipo</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_5">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -823,4 +833,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <signal>onClose()</signal>
+ </slots>
 </ui>

@@ -32,6 +32,8 @@ public:
     bool insertEmpleado(Empleado empleado);
     bool updateEmpleado(Empleado empleado);
     bool deleteEmpleado(QString cedula);
+
+    bool empleadoExist(QString cedula);
     Empleado findEmpleado(QString cedula);
     QSqlQuery findEmpleados(QString str = "", Campo campo = Campo::cedula, Status empStatus=Status::general, bool ini = true , bool fin = true);
 

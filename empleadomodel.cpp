@@ -3,9 +3,11 @@
 const QString TABLE_EMPLEADO = "empleado";
 const QString TABLE_DEDUCCION = "deduccionemp";
 const QString TABLE_ASIGNACION = "asignacionemp";
-const QString TABLE_NOMINAEMP = "";
+const QString TABLE_NOMINAPROCESADA = "nominaprocesada";
 const QString TABLE_AREA= "area";
 const QString TABLE_CLASIFIC = "clasificacion";
+const QString TABLE_NOMINAPROCESADADETALLERESUMVIEW = "nominaprocesadadetalleresumview";
+
 EmpleadoModel::EmpleadoModel(connDB conn)
 {
     query = new QSqlQuery(conn.db);
@@ -141,6 +143,15 @@ bool EmpleadoModel::deleteEmpleado(QString cedula)
         debugMessage(status);
         return true;
     }
+}
+
+bool EmpleadoModel::empleadoExist(QString cedula)
+{
+    Empleado empleado = findEmpleado(cedula);
+    if (empleado.getCedula() == "DEFAULT")
+        return false;
+    else
+        return true;
 }
 
 Empleado EmpleadoModel::findEmpleado(QString cedula)
@@ -423,6 +434,32 @@ QSqlQuery EmpleadoModel::findAsignaciones(QString cedulaEmp,QString asignacion,E
          debugMessage(status);
      }
      return *query;
+}
+
+QSqlQuery EmpleadoModel::findNominaProcesada(QString cedulaEmp, QString str, bool ini, bool fin)
+{
+    (void) str;
+    (void) ini;
+    (void) fin;
+
+    query->prepare("SELECT numero,(SELECT descripcion FROM "+TABLE_NOMINAPROCESADA+" WHERE "+TABLE_NOMINAPROCESADA+".numero="+TABLE_NOMINAPROCESADADETALLERESUMVIEW+".numero) as Descripción, "
+                                "(SELECT fecha_pago FROM "+TABLE_NOMINAPROCESADA+" WHERE "+TABLE_NOMINAPROCESADA+".numero="+TABLE_NOMINAPROCESADADETALLERESUMVIEW+".numero) as FechaPago,"
+                                "FORMAT(salario,2) as Salario,FORMAT(asignacion,2) as Asignacion,FORMAT(deduccion,2) as Deduccion,FORMAT(pago,2) as Pago "
+                                "FROM "+TABLE_NOMINAPROCESADADETALLERESUMVIEW+" WHERE cedula=:cedula");
+
+    query->bindValue(":cedula",cedulaEmp);
+
+    if (!query->exec())
+    {
+        status = "ERROR al buscar Nominas Procesadas de Empleado Cedula:"+cedulaEmp+" error:"+query->lastError().text();
+        debugMessage(status);
+        debugMessage(query->executedQuery());
+    }else
+    {
+        status = "Busqueda de Nominas Procesadas de Empleado Cedula:"+cedulaEmp+" Realizada Exitosamente...";
+        debugMessage(status);
+    }
+    return *query;
 }
 
 QSqlQuery EmpleadoModel::findAreas()

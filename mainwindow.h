@@ -13,7 +13,10 @@
 #include "nominacargadawidget.h"
 #include "nominaprocesadawidget.h"
 #include "nominacargardialog.h"
-#include "LimeReport"
+#include "reportmodel.h"
+#include "empresadialog.h"
+#include "anticipowidget.h"
+#include "anticipomodel.h"
 
 namespace Ui {
 class MainWindow;
@@ -52,6 +55,20 @@ private slots:
 
     void on_CargarNomPushButton_clicked();
 
+    void updateTables();
+
+    void on_EliminarNomProcPushButton_clicked();
+
+    void on_actionConfiguracion_triggered();
+
+    void on_CargarNomPushButton_2_clicked();
+
+    void on_verAnticipoPushButton_clicked();
+
+    void on_anticipoTableView_doubleClicked(const QModelIndex &index);
+
+    void on_CargarNomPushButton_4_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -59,20 +76,31 @@ private:
     Usuario usuario;
 
     NominaModel* model;
+
     QLabel* userLabel;
+
+    NominaCargadaWidget* NomCargadaW;
+    NominaProcesadaWidget* nomProcesadaW;
+    AnticipoWidget* anticipoW;
 
     QSqlQueryModel* nominaCargadaModel;
     QSqlQueryModel* nominaProcesadaModel;
+    QSqlQueryModel* anticipoModel;
 
     void prepareWindow();
     void cargarStyleSheet();
 
     void updateNominaCargadaTableView();
     void updateNominaProcesadaTableView();
+    void updateAnticipoTableView();
     void loadDatosEmpleados();
 
     void nominaCargadaWidget();
     void nominaProcesadaWidget();
+
+    void imprimirNomina();
+
+    void eliminarNominaProcesada();
 };
 
 #endif // MAINWINDOW_H

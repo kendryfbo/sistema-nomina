@@ -1,13 +1,13 @@
 #include "empleadowidget.h"
 #include "ui_empleadowidget.h"
-
 #include "nominamodel.h"
+
 EmpleadoWidget::EmpleadoWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EmpleadoWidget)
 {
     ui->setupUi(this);
-
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     model = new EmpleadoModel("empleado","127.0.0.1","nomina","root","19017070",3306);
 
     if (!model->isConected()){
@@ -51,6 +51,17 @@ void EmpleadoWidget::prepareWidget()
     updateEmpleadoTableView("");
     ui->empleadoTableView->selectRow(0);
 
+    // INVISIBLES HASTA CORRECTA IMPLEMENTACION
+    ui->nominaCargadaGroupBox->setVisible(false);
+    ui->asignEventTableView->setVisible(false);
+    ui->agrAsignEvenPushButton->setVisible(false);
+    ui->EliminarAsignEventPushButton->setVisible(false);
+    ui->asignEventLabel->setVisible(false);
+    ui->deduccEventTableView->setVisible(false);
+    ui->deduccEventLabel->setVisible(false);
+    ui->agrDeduccEvenPushButton->setVisible(false);
+    ui->eliminarDeduccEventPushButton->setVisible(false);
+
 }
 
 void EmpleadoWidget::setState(EmpleadoWidget::State xstate)
@@ -73,13 +84,16 @@ void EmpleadoWidget::stateAgregar()
     ui->empleadoTableView->setEnabled(false);
     ui->busquedaComboBox->setEnabled(false);
     ui->busquedaLineEdit->setEnabled(false);
-
     ui->deduccTab->setEnabled(false);
     ui->asingnTab->setEnabled(false);
     ui->nominaTab->setEnabled(false);
 
+    botonesDeTabla(false);
+
     ui->datosPersTab->setEnabled(true);
     ui->infLabTab->setEnabled(true);
+    ui->cedulaLineEdit->setEnabled(true);
+    ui->fechaIngrDateEdit->setEnabled(true);
 
     ui->cedulaLineEdit->clear();
     ui->rifLineEdit->clear();
@@ -94,6 +108,7 @@ void EmpleadoWidget::stateAgregar()
     ui->tlf2LineEdit->clear();
     ui->direccionLineEdit->clear();
     ui->nivelAcadLineEdit->clear();
+    ui->nivelSupCheckBox->setEnabled(true);
     ui->nivelSupCheckBox->setChecked(false);
     ui->especLineEdit->clear();
     ui->tituloLineEdit->clear();
@@ -107,6 +122,7 @@ void EmpleadoWidget::stateAgregar()
     ui->salarioHoraDoubleSpinBox->setValue(0);
     ui->salarioDiaDoubleSpinBox->setValue(0);
     ui->salarioMesDoubleSpinBox->setValue(0);
+    ui->clasifcComboBox->setCurrentIndex(-1);
 
     ui->accionPushButton->setText("Agregar");
     ui->accionPushButton->setVisible(true);
@@ -125,11 +141,13 @@ void EmpleadoWidget::stateModificar()
     ui->asingnTab->setEnabled(false);
     ui->nominaTab->setEnabled(false);
 
+    botonesDeTabla(false);
+
     ui->datosPersTab->setEnabled(true);
     ui->infLabTab->setEnabled(true);
-   ui->fechaIngrDateEdit->setEnabled(false);
+   ui->fechaIngrDateEdit->setEnabled(true);
    ui->cedulaLineEdit->setEnabled(false);
-
+   ui->nivelSupCheckBox->setEnabled(true);
    ui->accionPushButton->setText("Modificar");
    ui->accionPushButton->setVisible(true);
    ui->tabWidget->setCurrentIndex(0);
@@ -146,8 +164,11 @@ void EmpleadoWidget::stateInicial()
     ui->asingnTab->setEnabled(true);
     ui->nominaTab->setEnabled(true);
 
+    botonesDeTabla(true);
+
     ui->datosPersTab->setEnabled(false);
     ui->infLabTab->setEnabled(false);
+
 
     ui->cedulaLineEdit->clear();
     ui->rifLineEdit->clear();
@@ -162,7 +183,7 @@ void EmpleadoWidget::stateInicial()
     ui->tlf2LineEdit->clear();
     ui->direccionLineEdit->clear();
     ui->nivelAcadLineEdit->clear();
-    ui->nivelSupCheckBox->setChecked(false);
+    ui->nivelSupCheckBox->setEnabled(false);
     ui->especLineEdit->clear();
     ui->tituloLineEdit->clear();
 
@@ -209,7 +230,7 @@ void EmpleadoWidget::cargarEmpleado()
     cargarInfoLaboral();
     cargarDeduccionesEmpelado();
     cargarAsignacionesEmpelado();
-    //cargarNominasEmpelado();
+    cargarNominasEmpelado();
 
 }
 
@@ -227,7 +248,7 @@ void EmpleadoWidget::cargarDatosEmpleado()
     ui->tlf2LineEdit->setText(empleado.getTlf2());
     ui->direccionLineEdit->setText(empleado.getDireccion());
     ui->nivelAcadLineEdit->setText(empleado.getNivelAcad());
-    ui->nivelSupCheckBox->setCheckable(empleado.getNivelAcadSup());
+    ui->nivelSupCheckBox->setChecked(empleado.getNivelAcadSup());
     ui->especLineEdit->setText(empleado.getEspec());
     ui->tituloLineEdit->setText(empleado.getTitulo());
 }
@@ -266,7 +287,7 @@ void EmpleadoWidget::cargarInfoLaboral()
         if (empleado.getStatus() == ui->statusComboBox->currentText())
             break;
     }
-
+    ui->antiguedadLineEdit->setText(QString::number(empleado.getAntiguedad()));
     ui->fechaIngrDateEdit->setDate(QDate::fromString(empleado.getFechaIng(),"yyyy-MM-dd"));
     ui->HorasSpinBox->setValue(empleado.getHoras());
     ui->salarioHoraDoubleSpinBox->setValue(empleado.getSalarioHora());
@@ -285,6 +306,11 @@ void EmpleadoWidget::cargarAsignacionesEmpelado()
 {
     updateAsignFijaTableView();
     updateAsignEventTableView();
+}
+
+void EmpleadoWidget::cargarNominasEmpelado()
+{
+    updateNomProcTableView();
 }
 
 Empleado EmpleadoWidget::descargarEmpleado()
@@ -343,7 +369,7 @@ void EmpleadoWidget::updateDeduccFijaTableView()
 {
     deducFijaModel->setQuery(model->findDeducciones(empleado.getCedula(),"",model->Tipo::fija));
     deducFijaModel->setHeaderData(0,Qt::Horizontal,"Código");
-    ui->deduccFijaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->deduccFijaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->deduccFijaTableView->setModel(deducFijaModel);
 }
 
@@ -351,7 +377,7 @@ void EmpleadoWidget::updateDeduccEventTableView()
 {
     deducEventModel->setQuery(model->findDeducciones(empleado.getCedula(),"",model->Tipo::eventual));
     deducEventModel->setHeaderData(0,Qt::Horizontal,"Código");
-    ui->deduccEventTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->deduccEventTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->deduccEventTableView->setModel(deducEventModel);
 }
 
@@ -359,7 +385,7 @@ void EmpleadoWidget::updateAsignFijaTableView()
 {
     asignFijaModel->setQuery(model->findAsignaciones(empleado.getCedula(),"",model->Tipo::fija));
     asignFijaModel->setHeaderData(0,Qt::Horizontal,"Código");
-    ui->asignFijaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->asignFijaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->asignFijaTableView->setModel(asignFijaModel);
 }
 
@@ -367,8 +393,15 @@ void EmpleadoWidget::updateAsignEventTableView()
 {
     asignEventModel->setQuery(model->findAsignaciones(empleado.getCedula(),"",model->Tipo::eventual));
     asignEventModel->setHeaderData(0,Qt::Horizontal,"Código");
-    ui->asignEventTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->asignEventTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->asignEventTableView->setModel(asignEventModel);
+}
+
+void EmpleadoWidget::updateNomProcTableView()
+{
+    nominaModel->setQuery(model->findNominaProcesada(empleado.getCedula()));
+    ui->nominaProcesadaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->nominaProcesadaTableView->setModel(nominaModel);
 }
 
 void EmpleadoWidget::on_agregarPushButton_clicked()
@@ -477,8 +510,62 @@ void EmpleadoWidget::elimianrEmpleado()
 
 bool EmpleadoWidget::validarDatos()
 {
-    // falta por crear
-    return true;
+    QString advertencias = "";
+
+    if (ui->fechaIngrDateEdit->date().toString().isEmpty())
+    {
+        advertencias = "- <b>Campo Fecha de Ingreso  no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->fechaIngrDateEdit->setFocus();
+    }
+    if (ui->clasifcComboBox->currentText().isEmpty())
+    {
+        advertencias = "- <b>Campo Clasificación no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->clasifcComboBox->setFocus();
+    }
+    if (ui->CampoComboBox->currentText().isEmpty())
+    {
+        advertencias = "- <b>Campo Campo no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->CampoComboBox->setFocus();
+    }
+    if (ui->apellidosLineEdit->text().isEmpty())
+    {
+        advertencias = "- <b>Campo Apellidos no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->apellidosLineEdit->setFocus();
+    }
+    if (ui->apellidosLineEdit->text().isEmpty())
+    {
+        advertencias = "- <b>Campo Apellidos no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->apellidosLineEdit->setFocus();
+    }
+    if (ui->nombresLineEdit->text().isEmpty())
+    {
+        advertencias = "- <b>Campo Nombres no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->nombresLineEdit->setFocus();
+    }
+    if (ui->cedulaLineEdit->text().isEmpty())
+    {
+        advertencias = "- <b>Campo Cedula no Puede estar en Blanco<b> \n "+ advertencias;
+        ui->cedulaLineEdit->setFocus();
+    }
+
+    if (advertencias == "") return true;
+    else {
+        QMessageBox::warning(this,"Alerta",advertencias);
+        return false;
+    }
+}
+
+void EmpleadoWidget::botonesDeTabla(bool sentinela)
+{
+    ui->agregarPushButton->setEnabled(sentinela);
+    ui->modificarPushButton->setEnabled(sentinela);
+}
+
+void EmpleadoWidget::nominaProcesadaWidget(int nominaNum)
+{
+    NominaProcesadaWidget* nomProcesadaW = new NominaProcesadaWidget(nominaNum,this);
+    nomProcesadaW->setWindowFlags(Qt::Window);
+    nomProcesadaW->show();
 }
 
 void EmpleadoWidget::on_CampoComboBox_currentIndexChanged(int index)
@@ -517,11 +604,13 @@ void EmpleadoWidget::on_accionPushButton_clicked()
 
 void EmpleadoWidget::on_ProcNominaPushButton_clicked()
 {
+    /*
     Nomina nomina;
 
     NominaModel nominaModel("empleado","127.0.0.1","nomina","root","19017070",3306);
 
     nominaModel.cargarNominaEmpleado(empleado,nomina);
+*/
 }
 
 void EmpleadoWidget::on_agrDeduccFijPushButton_clicked()
@@ -599,5 +688,23 @@ void EmpleadoWidget::on_EliminarAsignEventPushButton_clicked()
         QString codigo = asignEventModel->record(row).value("cod_asignacion").toString();
         deleteAsignacion(codigo);
         cargarAsignacionesEmpelado();
+    }
+}
+
+void EmpleadoWidget::on_nominaProcesadaTableView_doubleClicked(const QModelIndex &index)
+{
+    int nominaNum = nominaModel->record(index.row()).value("numero").toInt();
+    nominaProcesadaWidget(nominaNum);
+}
+
+void EmpleadoWidget::on_cedulaLineEdit_editingFinished()
+{
+    QString cedula = ui->cedulaLineEdit->text();
+    if (model->empleadoExist(cedula)){
+        ui->cedulaLineEdit->blockSignals(true);
+        QMessageBox::warning(this,"ALERTA","Cedula de Empleado ya se encuentra Registrada");
+        ui->cedulaLineEdit->blockSignals(false);
+        ui->cedulaLineEdit->setFocus();
+        ui->cedulaLineEdit->clear();
     }
 }

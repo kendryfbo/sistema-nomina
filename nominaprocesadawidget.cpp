@@ -6,7 +6,7 @@ NominaProcesadaWidget::NominaProcesadaWidget(int nominaNum, QWidget *parent) :
     ui(new Ui::NominaProcesadaWidget)
 {
     ui->setupUi(this);
-
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     model = new NominaModel("nominaProcesada","127.0.0.1","nomina","root","19017070",3306);
 
     if (!model->isConected()){
@@ -26,6 +26,7 @@ NominaProcesadaWidget::NominaProcesadaWidget(int nominaNum, QWidget *parent) :
 
 NominaProcesadaWidget::~NominaProcesadaWidget()
 {
+    delete model;
     delete ui;
 }
 
@@ -114,6 +115,25 @@ void NominaProcesadaWidget::prepareWidget()
     ui->empleadoTableView->selectRow(0);
 }
 
+void NominaProcesadaWidget::eliminarNominaProcesada()
+{
+    QMessageBox msg;
+    msg.setModal(true);
+    msg.addButton(QMessageBox::Yes);
+    msg.addButton(QMessageBox::Cancel);
+    msg.setDefaultButton(QMessageBox::Yes);
+    if (msg.question(this,"Advertencia","¿Desea Eliminar Nomina Procesada? ") == QMessageBox::Yes){
+
+        if (model->deleteNominaProcesada(nomina.getNumero()))
+        {
+            QMessageBox::information(this,"Información",model->getStatusMessage(),QMessageBox::Ok);
+            this->close();
+        }
+        else
+            QMessageBox::critical(this,"Error",model->getStatusMessage(),QMessageBox::Ok);
+    }
+}
+
 void NominaProcesadaWidget::on_impirmirNominaPushButton_clicked()
 {
     ReportModel report;
@@ -133,4 +153,14 @@ void NominaProcesadaWidget::on_ImprimirRecibosPushButton_clicked()
     ReportModel report;
 
     report.recibosEmpleados(nomina.getNumero());
+}
+
+void NominaProcesadaWidget::on_eliminarNominaPushButton_clicked()
+{
+
+}
+
+void NominaProcesadaWidget::on_busquedaLineEdit_textChanged(const QString &arg1)
+{
+    updateEmpleadosTableView(arg1);
 }

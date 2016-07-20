@@ -25,6 +25,14 @@ const QString TABLE_ASIGNACIONEMP = "asignacionemp";
 const QString TABLE_ASIGNACIONPROCESADA = "asignacionprocesada";
 const QString TABLE_ASIGNPROCESADARESUMVIEW = "asignacionprocesadaresumview";
 
+const QString TABLE_ANTICIPOVIEW = "anticipoview";
+const QString TABLE_ANTICIPODETALLEVIEW = "anticipodetalleview";
+
+
+const double porcentajeSeguroSocial = 4;
+const double porcentajeParoForsozo = 0.5;
+const double porcentajeLeyPoliticaHabitacinal = 1;
+
 NominaModel::NominaModel()
 {
     AreaModel areaModel(conexion);
@@ -225,7 +233,7 @@ Nomina NominaModel::findNominaCargada(int numero)
 
 QSqlQuery NominaModel::findNominasCargadas()
 {
-    query->prepare("SELECT * FROM "+TABLE_NOMINACARGADARESUMVIEW);
+    query->prepare("SELECT * FROM "+TABLE_NOMINACARGADARESUMVIEW+" ORDER BY Generada DESC");
 
     if (!query->exec())
     {
@@ -234,6 +242,34 @@ QSqlQuery NominaModel::findNominasCargadas()
     }else
     {
         status = "Nominas Cargadas Buscadas Exitosamente...";
+        debugMessage(status);
+    }
+    return *query;
+}
+
+QSqlQuery NominaModel::findEmpleadosFromNominaCargadaDetalle(int numero, QString str, NominaModel::CampoEmp campo)
+{
+    QString sql = "";
+
+    sql = "SELECT * FROM "+TABLE_NOMINACARGADADETALLE+" WHERE numero=:numero ";
+
+    if (campo == CampoEmp::cedula)
+        sql = sql + "AND ced_emp LIKE('%"+str+"%')";
+    else if (campo == CampoEmp::nombres)
+        sql = sql + "AND nombres LIKE('%"+str+"%')";
+    else if (campo == CampoEmp::apellidos)
+        sql = sql + "AND apellidos LIKE('%"+str+"%')";
+
+    query->prepare(sql);
+    query->bindValue(":numero",numero);
+
+    if (!query->exec())
+    {
+        status = "ERROR al buscar Empleados detalle en Nomina Numero: "+QString::number(numero)+",  Error:"+ query->lastError().text();
+        debugMessage(status);
+        debugMessage(query->lastQuery());
+    } else {
+        status = "Busqueda de Empleados en detalle Nomina Numero: "+QString::number(numero)+" realizada Exitosamente...";
         debugMessage(status);
     }
     return *query;
@@ -327,6 +363,32 @@ QSqlQuery NominaModel::findDeduccNomCargadasFromEmp(int nominaNum, QString cedul
     return *query;
 }
 
+bool NominaModel::agregarDeduccionEmpleado(QString deduccionCod, QString empCedula, int nominaNum, int Cantidad)
+{
+    Deduccion deduccion = deduccModel->findDeduccion(deduccionCod);
+    Empleado empleado = empModel->findEmpleado(empCedula);
+    Nomina nomina = findNominaCargada(nominaNum);
+    return insertDeduccionCargada(deduccion,empleado,nominaNum,nomina.getDeduccion(),Cantidad);
+}
+
+bool NominaModel::agregarASignacionEmpleado(QString asignacionCod, QString empCedula, int nominaNum, int Cantidad)
+{
+    Asignacion asignacion = asignacModel->findAsignacion(asignacionCod);
+    Empleado empleado = empModel->findEmpleado(empCedula);
+    Nomina nomina = findNominaCargada(nominaNum);
+    return insertAsignacionCargada(asignacion,empleado,nominaNum,nomina.getAsignacion(),Cantidad);
+}
+
+bool NominaModel::eliminarDeduccionEmpleado(QString deduccionCod, QString empCedula, int nominaNum)
+{
+    return deleteDeduccionCargada(deduccionCod,empCedula,nominaNum);
+}
+
+bool NominaModel::eliminarASignacionEmpleado(QString asignacionCod, QString empCedula, int nominaNum)
+{
+    return deleteAsignacionCargada(asignacionCod,empCedula,nominaNum);
+}
+
 bool NominaModel::procesarNomina(int nominaNum)
 {
     startTransaction();
@@ -373,9 +435,25 @@ bool NominaModel::procesarNomina(int nominaNum)
     }
 }
 
+bool NominaModel::deleteNominaProcesada(int nominaNum)
+{
+    query->prepare("DELETE FROM nominaprocesada WHERE numero=:numero");
+    query->bindValue(":numero",nominaNum);
+
+    if (!query->exec())
+    {
+        status = "ERROR al eliminar Nomina Procesada numero "+QString::number(nominaNum)+" Error: "+query->lastError().text();
+        debugMessage(status);
+        return false;
+    }
+    status = "Nomina Procesada Numero: "+QString::number(nominaNum)+" Eliminada Exitosamente...";
+    debugMessage(status);
+    return true;
+}
+
 QSqlQuery NominaModel::findNominasProcesadas()
 {
-    query->prepare("SELECT * FROM "+TABLE_NOMINAPROCESADARESUMVIEW);
+    query->prepare("SELECT * FROM "+TABLE_NOMINAPROCESADARESUMVIEW+ " ORDER BY Generada DESC");
 
     if (!query->exec())
     {
@@ -514,6 +592,53 @@ QSqlQuery NominaModel::findDeduccNomProcesadaCargadasFromEmp(int nominaNum, QStr
     return *query;
 }
 
+QSqlQuery NominaModel::findAnticiposView()
+{
+    query->prepare("SELECT * FROM "+TABLE_ANTICIPOVIEW);
+
+    if (!query->exec())
+    {
+        status = "ERROR al realizar busqueda de Anticipos View. ERROR: "+query->lastError().text();
+        debugMessage(status);
+    } else
+        status = "Busqueda de Anticipos View Realizada exitosamente...";
+        debugMessage(status);
+        return *query;
+}
+
+bool NominaModel::cargarAnticipos(int anticipoId, int nominaNum)
+{
+    startTransaction();
+
+    query->prepare("SELECT * FROM "+TABLE_ANTICIPODETALLEVIEW+" WHERE id=:id");
+    query->bindValue(":id",anticipoId);
+
+    if (!query->exec())
+    {
+        status = "ERROR al Buscar empleados en anticipo Numero: "+QString::number(anticipoId)+". ERROR: "+query->lastError().text();
+        debugMessage(status);
+        rollBack();
+        return false;
+    } else {
+        while (query->next())
+        {
+            QString cedula = query->value("cedula").toString();
+            QString descripcion = query->value("descripcion").toString();
+            double monto = query->value("monto").toDouble();
+            if (!insertDeduccionDeAnticipoNomCargada(cedula,descripcion,monto,anticipoId,nominaNum))
+            {
+                status = "ERROR al cargar Anticipos en nomina cargada. ERROR: " + status;
+                debugMessage(status);
+                rollBack();
+                return false;
+                break;
+            }
+        }
+        Commit();
+        return true;
+    }
+}
+
 bool NominaModel::cargarNominaEmpleado(Empleado empleado, Nomina nomina)
 {
     startTransaction();
@@ -522,7 +647,7 @@ bool NominaModel::cargarNominaEmpleado(Empleado empleado, Nomina nomina)
     query->next();
     int nominaNum = query->value(0).toInt() + 1;
 
-    if (!insertNominaCargada(nomina,nominaNum))
+    if (!insertNominaCargada(nomina))
     {
         status = "ERROR al cargar nomina Empleado: \n" + status;
         debugMessage(status);
@@ -532,6 +657,22 @@ bool NominaModel::cargarNominaEmpleado(Empleado empleado, Nomina nomina)
 
     nomina = findNominaCargada(nominaNum);
 
+    if (!insertNominaCargadaDetalle(nomina,empleado))
+    {
+        status = "ERROR al cargar nomina Empleado: " + status;
+        debugMessage(status);
+        rollBack();
+        return false;
+    }
+
+    if (!insertAsignacionesCargadas(nomina,empleado))
+    {
+        status = "ERROR al cargar nomina Empleado: " + status;
+        debugMessage(status);
+        rollBack();
+        return false;
+    }
+
     if (!insertDeduccionesCargadas(nomina,empleado))
     {
         status = "ERROR al cargar nomina Empleado: " + status;
@@ -540,13 +681,7 @@ bool NominaModel::cargarNominaEmpleado(Empleado empleado, Nomina nomina)
         return false;
     }
 
-    if (!insertNominaCargadaDetalle(nomina,empleado))
-    {
-        status = "ERROR al cargar nomina Empleado: " + status;
-        debugMessage(status);
-        rollBack();
-        return false;
-    }
+
 
     status = "Nomina Empleado Cargada Exitosamente...";
     debugMessage(status);
@@ -561,22 +696,20 @@ bool NominaModel::cargarNominaArea(QString area, Nomina nomina)
 
     startTransaction();
 
-    query->exec("SELECT MAX(numero) FROM "+TABLE_NOMINACARGADA+" FOR UPDATE");
-    query->next();
-    int nominaNum = query->value(0).toInt() + 1;
 
-    if (!insertNominaCargada(nomina,nominaNum))
+    if (!insertNominaCargada(nomina))
     {
         status = "ERROR al cargar nomina Area: " + status;
         debugMessage(status);
         rollBack();
         return false;
     }
+    int nominaNum = query->lastInsertId().toInt();
 
     nomina = findNominaCargada(nominaNum);
 
-
-    query->prepare("SELECT * FROM empleado WHERE cod_area=:area");
+    query->prepare("SELECT * FROM empleado WHERE cod_area=:area AND status=:status");
+    query->bindValue(":status","ACTIVO");
     query->bindValue(":area",area);
 
     if (!query->exec())
@@ -594,7 +727,7 @@ bool NominaModel::cargarNominaArea(QString area, Nomina nomina)
         {
             Empleado empleado = empModel->findEmpleado(cedulasEmpelados.at(i));
 
-            if (!insertDeduccionesCargadas(nomina,empleado))
+            if (!insertNominaCargadaDetalle(nomina,empleado))
             {
                 status = "ERROR al cargar nomina Empleado: " + status;
                 debugMessage(status);
@@ -610,7 +743,7 @@ bool NominaModel::cargarNominaArea(QString area, Nomina nomina)
                 return false;
             }
 
-            if (!insertNominaCargadaDetalle(nomina,empleado))
+            if (!insertDeduccionesCargadas(nomina,empleado))
             {
                 status = "ERROR al cargar nomina Empleado: " + status;
                 debugMessage(status);
@@ -649,14 +782,13 @@ bool NominaModel::deleteNominaCargada(int numero)
     return true;
 }
 
-bool NominaModel::insertNominaCargada(Nomina &nomina, int numero)
+bool NominaModel::insertNominaCargada(Nomina &nomina)
 {
     query->prepare("INSERT INTO "+TABLE_NOMINACARGADA+" ("
                                                       "numero,descripcion,dias,porc_salario,porc_deduccion,porc_asignacion,fecha_pago,fecha_desde,fecha_hasta,cod_usuario,fecha_creac)"
                                                       " VALUES ("
-                                                      ":numero,:descripcion,:dias,:porc_salario,:porc_deduccion,:porc_asignacion,:fecha_pago,:fecha_desde,:fecha_hasta,:cod_usuario,CURDATE())");
+                                                      "NULL,:descripcion,:dias,:porc_salario,:porc_deduccion,:porc_asignacion,:fecha_pago,:fecha_desde,:fecha_hasta,:cod_usuario,CURDATE())");
 
-    query->bindValue(":numero",numero);
     query->bindValue(":descripcion",nomina.getDescripcion());
     query->bindValue(":dias",nomina.getDias());
     query->bindValue(":porc_salario",nomina.getSalario());
@@ -680,25 +812,25 @@ bool NominaModel::insertNominaCargada(Nomina &nomina, int numero)
 
 bool NominaModel::insertNominaCargadaDetalle(Nomina &nomina, Empleado &empleado)
 {
-    query->prepare("INSERT INTO "+TABLE_NOMINACARGADADETALLE+" ("
-                                                             "numero,ced_emp,salario) VALUES ("
-                                                             ":numero,:ced_emp,:salario)");
 
-    int salario = empleado.getSalarioDia() * nomina.getDias();
+    double salario = empleado.getSalarioDia() * nomina.getDias();
+    double salarioConDesc = salario * (nomina.getSalario()/100);
+
+    query->prepare("INSERT INTO "+TABLE_NOMINACARGADADETALLE+" ("
+                                                             "numero,ced_emp,salariogeneral,salario) VALUES ("
+                                                             ":numero,:ced_emp,:salariogeneral,:salario)");
 
     query->bindValue(":numero",nomina.getNumero());
     query->bindValue(":ced_emp",empleado.getCedula());
-    query->bindValue(":salario",salario);
+    query->bindValue(":salariogeneral",salario);
+    query->bindValue(":salario",salarioConDesc);
 
     if (!query->exec())
     {
         status = "ERROR al Insertar Nomina Cargada Detalle: " + query->lastError().text();
-        debugMessage(status);
-        debugMessage(query->lastQuery());
         return false;
     }
     status = "Nomina Cargada Detalle Insertada Exitosamente...";
-    debugMessage(status);
     return true;
 }
 
@@ -706,18 +838,23 @@ bool NominaModel::insertDeduccionesCargadas(Nomina &nomina, Empleado &empleado)
 {
    QSqlQuery queryTemp = empModel->findDeducciones(empleado.getCedula());
 
-   while (queryTemp.next())
+   if (nomina.getDeduccion()>0)
    {
-       QString codigoDeduccion = queryTemp.value("cod_deduccion").toString();
-       int cantidad = queryTemp.value("cantidad").toInt();
-
-       Deduccion deduccion(deduccModel->findDeduccion(codigoDeduccion));
-       if (!insertDeduccionCargada(deduccion,empleado,nomina.getNumero(),nomina.getDeduccion(),cantidad))
+       while (queryTemp.next())
        {
-           status = "ERROR al Insertar Deducciónes Cargadas: " + status;
-           debugMessage(status);
-           return false;
-           break;
+
+           QString codigoDeduccion = queryTemp.value("cod_deduccion").toString();
+           int cantidad = queryTemp.value("cantidad").toInt();
+
+           Deduccion deduccion(deduccModel->findDeduccion(codigoDeduccion));
+
+           if (!insertDeduccionCargada(deduccion,empleado,nomina.getNumero(),nomina.getDeduccion(),cantidad))
+           {
+               status = "ERROR al Insertar Deducciónes Cargadas: " + status;
+               debugMessage(status);
+               return false;
+               break;
+           }
        }
    }
    return true;
@@ -736,26 +873,43 @@ bool NominaModel::insertDeduccionCargada(Deduccion &deduccion,Empleado &empleado
     {
         if (empleado.getClasificacion().getFormaPago() == "HORA")
         {
-            valor = empleado.getSalarioHora();
+            valor = empleado.getSalarioHora() * (deduccion.getValor()/100);
         }
     }
     else  if (forma == "DIA")
     {
-        valor = empleado.getSalarioDia();
+        valor = empleado.getSalarioDia() * (deduccion.getValor()/100);
     }
     else  if (forma == "SEMANA")
     {
-        valor = empleado.getSalarioSemana();
+        valor = empleado.getSalarioSemana() * (deduccion.getValor()/100);
     }
     else  if (forma == "MES")
     {
-        valor = empleado.getSalarioMes();
+        valor = empleado.getSalarioMes() * (deduccion.getValor()/100);
+    }
+    else if (forma == "PORCENTAJE SALARIO")
+    {
+        double pago = getSalarioIntegralFromEmpleado(empleado.getCedula(),nominaNum);
+        valor = pago * (deduccion.getValor()/100);
     }
     else  if (forma == "FORMULA")
     {
         // UBICAR LISTA DE FORMULAS Y DEVOLVER VALOR
-        if ("S.S.O"){
+        if ("S.S.O" == deduccion.getFormula()){
 
+                double pago = getSalarioIntegralFromEmpleado(empleado.getCedula(),nominaNum);
+                valor = pago * (porcentajeSeguroSocial/100);
+
+        }else if ("P.F" == deduccion.getFormula()){
+
+                double pago = getSalarioIntegralFromEmpleado(empleado.getCedula(),nominaNum);
+                valor = pago * (porcentajeParoForsozo/100);
+
+        }else if ("L.P.H" == deduccion.getFormula()){
+
+                double pago = getSalarioIntegralFromEmpleado(empleado.getCedula(),nominaNum);
+                valor = pago * (porcentajeLeyPoliticaHabitacinal/100);
         }
     }
 
@@ -776,6 +930,7 @@ bool NominaModel::insertDeduccionCargada(Deduccion &deduccion,Empleado &empleado
         debugMessage(query->lastQuery());
         status = "ERROR al insertar Deducción Cargada: " + query->lastError().text();
         debugMessage(status);
+        debugMessage(query->executedQuery());
         return false;
     }else
     {
@@ -785,22 +940,44 @@ bool NominaModel::insertDeduccionCargada(Deduccion &deduccion,Empleado &empleado
     }
 }
 
+bool NominaModel::deleteDeduccionCargada(QString deduccionCod,QString empCedula,int nominaNum)
+{
+    query->prepare("DELETE FROM "+TABLE_DEDUCCIONCARGADA+" WHERE numero=:numero AND ced_emp=:cedula AND cod_deduc=:codigo");
+    query->bindValue(":numero",nominaNum);
+    query->bindValue(":cedula",empCedula);
+    query->bindValue(":codigo",deduccionCod);
+
+    if (!query->exec()) {
+        status = "ERROR al Eliminar Deducción Codigo: "+deduccionCod+", Empleado Cedula: "+empCedula+" Nomina: "+QString::number(nominaNum)+": " + query->lastError().text();
+        debugMessage(status);
+        return false;
+    } else
+    {
+        status = "Deduccion Codigo: "+deduccionCod+", Empleado Cedula: "+empCedula+" Nomina: "+QString::number(nominaNum)+" Eliminada Exitosamente";
+        debugMessage(status);
+        return true;
+    }
+}
+
 bool NominaModel::insertAsignacionesCargadas(Nomina &nomina, Empleado &empleado)
 {
     QSqlQuery queryTemp = empModel->findAsignaciones(empleado.getCedula());
 
-    while (queryTemp.next())
+    if (nomina.getAsignacion()>0)
     {
-        QString codigoAsignacion = queryTemp.value("cod_asignacion").toString();
-        int cantidad = queryTemp.value("cantidad").toInt();
-
-        Asignacion asignacion(asignacModel->findAsignacion(codigoAsignacion));
-        if (!insertAsignacionCargada(asignacion,empleado,nomina.getNumero(),nomina.getAsignacion(),cantidad))
+        while (queryTemp.next())
         {
-            status = "ERROR al Insertar Asignaciónes Cargadas: " + status;
-            debugMessage(status);
-            return false;
-            break;
+            QString codigoAsignacion = queryTemp.value("cod_asignacion").toString();
+            int cantidad = queryTemp.value("cantidad").toInt();
+
+            Asignacion asignacion(asignacModel->findAsignacion(codigoAsignacion));
+            if (!insertAsignacionCargada(asignacion,empleado,nomina.getNumero(),nomina.getAsignacion(),cantidad))
+            {
+                status = "ERROR al Insertar Asignaciónes Cargadas: " + status;
+                debugMessage(status);
+                return false;
+                break;
+            }
         }
     }
     return true;
@@ -834,20 +1011,28 @@ bool NominaModel::insertAsignacionCargada(Asignacion &asignacion, Empleado &empl
     {
         valor = empleado.getSalarioMes();
     }
+    else if (forma == "PORCENTAJE SALARIO")
+    {
+        double pago = getSalarioIntegralFromEmpleado(empleado.getCedula(),nominaNum);
+        valor = pago * (asignacion.getValor()/100);
+    }
     else  if (forma == "FORMULA")
     {
-        // UBICAR LISTA DE FORMULAS Y DEVOLVER VALOR
+        if ("ANTIGUEDAD" == asignacion.getFormula()){
+                valor = asignacion.getValor() * empleado.getAntiguedad();
+        }
     }
 
     valor = valor * (porcentaje/100);
 
     query->prepare("INSERT INTO "+TABLE_ASIGNACIONCARGADA+" ("
-                                   "numero,cod_asign,ced_emp,descripcion,cantidad,valor) VALUES ("
-                                                         ":numero,:cod_asign,:ced_emp,:descripcion,:cantidad,:valor)");
+                                   "numero,cod_asign,ced_emp,descripcion,prima,cantidad,valor) VALUES ("
+                                                         ":numero,:cod_asign,:ced_emp,:descripcion,:prima,:cantidad,:valor)");
     query->bindValue(":numero",nominaNum);
     query->bindValue(":cod_asign",asignacion.getCodigo());
     query->bindValue(":ced_emp",empleado.getCedula());
     query->bindValue(":descripcion",asignacion.getDescripcion());
+    query->bindValue(":prima",asignacion.hasPrima());
     query->bindValue(":cantidad",cantidad);
     query->bindValue(":valor",valor);
 
@@ -857,9 +1042,54 @@ bool NominaModel::insertAsignacionCargada(Asignacion &asignacion, Empleado &empl
         status = "ERROR al insertar Asignación Cargada: " + query->lastError().text();
         debugMessage(status);
         return false;
+    }else{
+        status = "Asignación Cargada insertada Exitosamente...";
+        debugMessage(status);
+        return true;
+    }
+}
+
+bool NominaModel::deleteAsignacionCargada(QString asignacionCod, QString empCedula, int nominaNum)
+{
+    query->prepare("DELETE FROM "+TABLE_ASIGNACIONCARGADA+" WHERE numero=:numero AND ced_emp=:cedula AND cod_asign=:codigo");
+    query->bindValue(":numero",nominaNum);
+    query->bindValue(":cedula",empCedula);
+    query->bindValue(":codigo",asignacionCod);
+
+    if (!query->exec()) {
+        status = "ERROR al Eliminar Asignación Codigo: "+asignacionCod+", Empleado Cedula: "+empCedula+" Nomina: "+QString::number(nominaNum)+": " + query->lastError().text();
+        debugMessage(status);
+        return false;
+    } else
+    {
+        status = "Asignación Codigo: "+asignacionCod+", Empleado Cedula: "+empCedula+" Nomina: "+QString::number(nominaNum)+" Eliminada Exitosamente";
+        debugMessage(status);
+        return true;
+    }
+}
+
+bool NominaModel::insertDeduccionDeAnticipoNomCargada(QString cedulaEmp,QString descripcion,double monto,int anticipoID, int nominaNum)
+{
+    QString codigo = "ANTCP"+QString::number(anticipoID);
+    int cantidad = 1;
+    query->prepare("INSERT INTO "+TABLE_DEDUCCIONCARGADA+" ("
+                                   "numero,cod_deduc,ced_emp,descripcion,cantidad,valor) VALUES ("
+                                                         ":numero,:cod_deduc,:ced_emp,:descripcion,:cantidad,:valor)");
+    query->bindValue(":numero",nominaNum);
+    query->bindValue(":cod_deduc",codigo);
+    query->bindValue(":ced_emp",cedulaEmp);
+    query->bindValue(":descripcion",descripcion);
+    query->bindValue(":cantidad",cantidad);
+    query->bindValue(":valor",monto);
+
+    if (!query->exec())
+    {
+        status = "ERROR al cargar anticipo en deduccion. ERROR: "+query->lastError().text();
+        debugMessage(status);
+        return false;
     }else
     {
-        status = "Asignación Cargada insertada Exitosamente...";
+        status = "Anticipo Insertado en Deducción Exitosamente...";
         debugMessage(status);
         return true;
     }
@@ -898,23 +1128,24 @@ bool NominaModel::insertNominaProcesada(int numero)
 
 bool NominaModel::insertNominaProcesadaEmp(int numero)
 {
-    QSqlQuery thisQuery =  findEmpleadosFromNominaCargada(numero);
-
+    QSqlQuery thisQuery =  findEmpleadosFromNominaCargadaDetalle(numero);
     while (thisQuery.next())
     {
         query->prepare("INSERT INTO "+TABLE_NOMINAPROCESADAEMP+" ("
-                                                                 "numero,ced_emp,salario) VALUES ("
-                                                                 ":numero,:ced_emp,:salario)");
+                                                                 "numero,ced_emp,salariogeneral,salario) VALUES ("
+                                                                 ":numero,:ced_emp,:salariogeneral,:salario)");
 
         query->bindValue(":numero",numero);
-        query->bindValue(":ced_emp",thisQuery.value("cedula").toString());
-        query->bindValue(":salario",thisQuery.value("salario").toString());
+        query->bindValue(":ced_emp",thisQuery.value("ced_emp").toString());
+        query->bindValue(":salariogeneral",thisQuery.value("salariogeneral").toDouble());
+        query->bindValue(":salario",thisQuery.value("salario").toDouble());
 
         if (!query->exec())
         {
             status = "ERROR al Insertar Datos Empleado en Nomina Procesada: " + query->lastError().text();
             debugMessage(status);
             return false;
+            break;
         }
 
     }
@@ -949,7 +1180,6 @@ bool NominaModel::insertDeduccionesProcesadas(int numero)
         query->bindValue(":cantidad",thisQuery.value("cantidad").toString());
         query->bindValue(":valor",thisQuery.value("valor").toString());
 
-
         if (!query->exec())
         {
             status = "ERROR al insertar Deducción Procesada: " + query->lastError().text();
@@ -957,7 +1187,6 @@ bool NominaModel::insertDeduccionesProcesadas(int numero)
             return false;
             }
     }
-
     status = "Deducciónes en Nomina Procesada insertados Exitosamente...";
     debugMessage(status);
     return true;
@@ -979,13 +1208,14 @@ bool NominaModel::insertAsignacionesProcesadas(int numero)
     while (thisQuery.next())
     {
         query->prepare("INSERT INTO "+TABLE_ASIGNACIONPROCESADA+" ("
-                                           "numero,cod_asign,ced_emp,descripcion,cantidad,valor) VALUES ("
-                                                                 ":numero,:cod_asign,:ced_emp,:descripcion,:cantidad,:valor)");
+                                           "numero,cod_asign,ced_emp,descripcion,prima,cantidad,valor) VALUES ("
+                                                                 ":numero,:cod_asign,:ced_emp,:descripcion,:prima,:cantidad,:valor)");
 
         query->bindValue(":numero",thisQuery.value("numero").toString());
         query->bindValue(":cod_asign",thisQuery.value("cod_asign").toString());
         query->bindValue(":ced_emp",thisQuery.value("ced_emp").toString());
         query->bindValue(":descripcion",thisQuery.value("descripcion").toString());
+        query->bindValue(":prima",thisQuery.value("prima").toInt());
         query->bindValue(":cantidad",thisQuery.value("cantidad").toString());
         query->bindValue(":valor",thisQuery.value("valor").toString());
 
@@ -1001,5 +1231,43 @@ bool NominaModel::insertAsignacionesProcesadas(int numero)
     status = "Asignaciónes en Nomina Procesada insertadas Exitosamente...";
     debugMessage(status);
     return true;
+}
+
+double NominaModel::getSalarioIntegralFromEmpleado(QString cedulaEmp, int nominaNum)
+{
+    query->prepare("SELECT total_salario FROM "+TABLE_NOMINACARGADADETALLERESUMVIEW+" WHERE cedula=:cedula AND numero=:numero");
+
+    query->bindValue(":cedula",cedulaEmp);
+    query->bindValue(":numero",nominaNum);
+
+    if (!query->exec())
+    {
+        status = "ERROR al buscar Salario Integral de Empleado Cedula: "+cedulaEmp+" error: " + query->lastError().text();
+        debugMessage(status);
+        return 0;
+    } else if (!query->next()){
+        status = "No se encontro Salario Integral de Empleado Cedula: "+cedulaEmp;
+        debugMessage(status);
+        return 0;
+    }
+    double salarioIntegral = query->value("total_salario").toDouble();
+    return salarioIntegral;
+}
+
+double NominaModel::getSalarioBaseFromEmpleado(QString cedulaEmp, int nominaNum)
+{
+    query->prepare("SELECT salariogeneral FROM "+TABLE_NOMINACARGADADETALLE+" WHERE cedula=:cedula AND numero=:numero");
+
+    query->bindValue(":cedula",cedulaEmp);
+    query->bindValue(":numero",nominaNum);
+
+    if (!query->exec())
+    {
+        status = "ERROR al buscar Salario Base de Empleado Cedula: "+cedulaEmp+" error: " + query->lastError().text();
+        debugMessage(status);
+        return 0;
+    }
+    double salarioBase = query->value("salario").toDouble();
+    return salarioBase;
 }
 

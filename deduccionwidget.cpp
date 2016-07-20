@@ -250,6 +250,16 @@ void DeduccionWidget::cargarDeduccion(Deduccion deduccion)
 
 Deduccion DeduccionWidget::descargarDeduccion()
 {
+    if (!(ui->FormaComboBox->currentText() == "FORMULA"))
+    {
+        deduccion = Deduccion(
+                    ui->codigoLineEdit->text(),
+                    ui->descripcionLineEdit->text(),
+                    ui->FormaComboBox->currentText(),
+                    ui->valorDoubleSpinBox->value(),
+                    "",
+                    ui->activoCheckBox->isChecked());
+    }else
     deduccion = Deduccion(
                 ui->codigoLineEdit->text(),
                 ui->descripcionLineEdit->text(),
@@ -306,7 +316,8 @@ void DeduccionWidget::updateFormaParameters (){
     {
         ui->formulaComboBox->setVisible(true);
         ui->formulaLabel->setVisible(true);
-        updateFormulaCombobox();
+        ui->valorDoubleSpinBox->setMaximum(100);
+        ui->valorDoubleSpinBox->setSuffix(" %  ");
     } else
     {
         ui->formulaComboBox->setVisible(false);

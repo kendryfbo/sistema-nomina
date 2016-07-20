@@ -6,7 +6,7 @@ NominaCargadaWidget::NominaCargadaWidget(int nominaNum, QWidget *parent) :
     ui(new Ui::NominaCargadaWidget)
 {
     ui->setupUi(this);
-
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     model = new NominaModel("nominaCargada","127.0.0.1","nomina","root","19017070",3306);
 
     if (!model->isConected()){
@@ -112,7 +112,6 @@ void NominaCargadaWidget::prepareWidget()
     deducTableModel = new QSqlQueryModel(this);
     updateEmpleadosTableView();
     ui->empleadoTableView->selectRow(0);
-
 }
 
 void NominaCargadaWidget::eliminarNominaCargada()
@@ -141,9 +140,64 @@ bool NominaCargadaWidget::procesarNomina()
     return false;
 }
 
-void NominaCargadaWidget::on_agregarAsignacionPpushButton_clicked()
+void NominaCargadaWidget::agregarDeduccion()
 {
+    DeduccionDialog* deduccD = new DeduccionDialog(this);
 
+    if (deduccD->exec() == QDialog::Accepted)
+    {
+        QString empCedula = ui->cedulaLineEdit->text();
+        model->agregarDeduccionEmpleado(deduccD->getCodigo(),empCedula,nomina.getNumero(),deduccD->getCantidad());
+
+        int position = ui->empleadoTableView->currentIndex().row();
+        updateEmpleadosTableView();
+        ui->empleadoTableView->selectRow(position);
+    }
+}
+
+void NominaCargadaWidget::AgregarAsignacion()
+{
+    AsignacionDialog* asignD = new AsignacionDialog(this);
+
+    if (asignD->exec() == QDialog::Accepted)
+    {
+        QString empCedula = ui->cedulaLineEdit->text();
+        model->agregarASignacionEmpleado(asignD->getCodigo(),empCedula,nomina.getNumero(),asignD->getCantidad());
+
+        int position = ui->empleadoTableView->currentIndex().row();
+        updateEmpleadosTableView();
+        ui->empleadoTableView->selectRow(position);
+    }
+}
+
+void NominaCargadaWidget::eliminarDeduccion()
+{
+    int row = ui->deduccionTableView->currentIndex().row();
+    if (!(row < 0))
+    {
+        QString codigo = deducTableModel->record(row).value("codigo").toString();
+        QString empCedula = ui->cedulaLineEdit->text();
+        model->eliminarDeduccionEmpleado(codigo,empCedula,nomina.getNumero());
+
+        int position = ui->empleadoTableView->currentIndex().row();
+        updateEmpleadosTableView();
+        ui->empleadoTableView->selectRow(position);
+    }
+}
+
+void NominaCargadaWidget::eliminarAsignacion()
+{
+    int row = ui->asignacionTableView->currentIndex().row();
+    if (!(row < 0))
+    {
+        QString codigo = asignTableModel->record(row).value("codigo").toString();
+        QString empCedula = ui->cedulaLineEdit->text();
+        model->eliminarASignacionEmpleado(codigo,empCedula,nomina.getNumero());
+
+        int position = ui->empleadoTableView->currentIndex().row();
+        updateEmpleadosTableView();
+        ui->empleadoTableView->selectRow(position);
+    }
 }
 
 void NominaCargadaWidget::on_busquedaLineEdit_textChanged(const QString &arg1)
@@ -159,4 +213,35 @@ void NominaCargadaWidget::on_procesarNominaPushButton_clicked()
 void NominaCargadaWidget::on_eliminarNominaPushButton_clicked()
 {
     eliminarNominaCargada();
+}
+
+void NominaCargadaWidget::on_agregarAsignacionPpushButton_clicked()
+{
+    AgregarAsignacion();
+}
+
+void NominaCargadaWidget::on_eliminarAsignacionPushButton_clicked()
+{
+    eliminarAsignacion();
+}
+
+void NominaCargadaWidget::on_agregarDeduccionPushButton_clicked()
+{
+    agregarDeduccion();
+}
+
+void NominaCargadaWidget::on_eliminarDeduccionPushButton_clicked()
+{
+    eliminarDeduccion();
+}
+
+void NominaCargadaWidget::on_anticipoPushButton_clicked()
+{
+    AnticipoListaDialog* anticipoDialog = new AnticipoListaDialog(this);
+
+    if (anticipoDialog->exec()){
+        if (!model->cargarAnticipos(anticipoDialog->getAnticipoId(),nomina.getNumero())){
+                QMessageBox::warning(this,"ERROR",model->getStatusMessage());
+        }
+    }
 }

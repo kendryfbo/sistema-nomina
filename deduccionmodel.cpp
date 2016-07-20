@@ -216,9 +216,7 @@ QStringList DeduccionModel::findFormulas(QString str, bool activo, DeduccionMode
      {
          status = "Error al Realizar Busqueda de Formula de Deducción: " + query->lastError().text();
          debugMessage(status);
-         debugMessage(query->executedQuery());
      }else{
-         debugMessage(query->executedQuery());
          while (query->next()){
              list << query->value("descripcion").toString();
          }

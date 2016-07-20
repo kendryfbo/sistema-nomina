@@ -28,6 +28,10 @@ private slots:
 
     void on_ImprimirRecibosPushButton_clicked();
 
+    void on_eliminarNominaPushButton_clicked();
+
+    void on_busquedaLineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::NominaProcesadaWidget *ui;
 

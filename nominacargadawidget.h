@@ -5,6 +5,9 @@
 #include <QMessageBox>
 
 #include "nominamodel.h"
+#include "asignaciondialog.h"
+#include "deducciondialog.h"
+#include "anticipolistadialog.h"
 
 namespace Ui {
 class NominaCargadaWidget;
@@ -30,6 +33,14 @@ private slots:
 
     void on_eliminarNominaPushButton_clicked();
 
+    void on_eliminarAsignacionPushButton_clicked();
+
+    void on_agregarDeduccionPushButton_clicked();
+
+    void on_eliminarDeduccionPushButton_clicked();
+
+    void on_anticipoPushButton_clicked();
+
 private:
     Ui::NominaCargadaWidget *ui;
     NominaModel* model;
@@ -50,6 +61,11 @@ private:
 
     void eliminarNominaCargada();
     bool procesarNomina();
+
+    void agregarDeduccion();
+    void AgregarAsignacion();
+    void eliminarDeduccion();
+    void eliminarAsignacion();
 
 };
 

@@ -7,6 +7,7 @@
 #include "nomina.h"
 #include "empleadomodel.h"
 #include "areamodel.h"
+#include "anticipomodel.h"
 
 class NominaModel : public Model
 {
@@ -33,21 +34,35 @@ public:
 
 
 
-     bool cargarNominaEmpleado(Empleado empleado, Nomina nomina);
      bool cargarNominaArea(QString area,Nomina nomina);
+
+     // ACTUALIZAR
+      bool cargarNominaEmpleado(Empleado empleado, Nomina nomina);
+     // ACTUALIZAR
      bool cargarNominaArea(QString area, int Numero);
+     // ACTUALIZAR
      bool CargarNomina(QList<QString> area,Nomina nomina);
+
 
      bool deleteNominaCargada(int numero);
      bool nominaExiste(int numero);
      Nomina findNominaCargada(int numero);
 
      QSqlQuery findNominasCargadas();
+     QSqlQuery findEmpleadosFromNominaCargadaDetalle(int numero,QString str = "",CampoEmp campo = CampoEmp::cedula);
      QSqlQuery findEmpleadosFromNominaCargada(int numero,QString str = "",CampoEmp campo = CampoEmp::cedula);
      QSqlQuery findAsignNomCargadaFromEmp(int nominaNum,QString cedula);
      QSqlQuery findDeduccNomCargadasFromEmp(int nominaNum,QString cedula);
      
+     bool agregarDeduccionEmpleado(QString deduccionCod,QString empCedula,int nominaNum,int Cantidad);
+     bool agregarASignacionEmpleado(QString asignacionCod,QString empCedula,int nominaNum,int Cantidad);
+     bool eliminarDeduccionEmpleado(QString deduccionCod,QString empCedula,int nominaNum);
+     bool eliminarASignacionEmpleado(QString asignacionCod,QString empCedula,int nominaNum);
+
+
      bool procesarNomina(int nominaNum);
+     bool deleteNominaProcesada(int nominaNum);
+
      QSqlQuery findNominasProcesadas();
      Nomina findNominaProcesada(int numero);
       bool nominaProcesadaExiste(int numero);
@@ -56,6 +71,10 @@ public:
       QSqlQuery findAsignNomProcesadaFromEmp(int nominaNum,QString cedula);
       QSqlQuery findDeduccNomProcesadaCargadasFromEmp(int nominaNum,QString cedula);
 
+
+      QSqlQuery findAnticiposView();
+      bool cargarAnticipos(int anticipoId,int nominaNum);
+
 private:
      EmpleadoModel* empModel;
      DeduccionModel* deduccModel;
@@ -63,14 +82,21 @@ private:
 
 
      // NOMINA CARGADA
-     bool  insertNominaCargada(Nomina &nomina,int numero);
+     bool  insertNominaCargada(Nomina &nomina);
      bool insertNominaCargadaDetalle(Nomina &nomina,Empleado &empleado);
 
      bool insertDeduccionesCargadas(Nomina &nomina,Empleado &empleado);
      bool insertDeduccionCargada(Deduccion &deduccion,Empleado &empleado,int nominaNum, double porcentaje,int cantidad);
+     bool deleteDeduccionCargada(QString deduccionCod,QString empCedula,int nominaNum);
 
      bool insertAsignacionesCargadas(Nomina &nomina,Empleado &empleado);
      bool insertAsignacionCargada(Asignacion &asignacion,Empleado &empleado,int nominaNum, double porcentaje,int cantidad);
+     bool deleteAsignacionCargada(QString asignacionCod,QString empCedula,int nominaNum);
+
+     /* ANTICIPOS */
+
+     // CARGAR ANTICIPOS PENDIENTES POR PROCESAR
+     bool insertDeduccionDeAnticipoNomCargada(QString cedulaEmp,QString descripcion,double monto,int anticipoID, int nominaNum);
 
       // NOMINA PROCESADA
      bool  insertNominaProcesada(int numero);
@@ -79,8 +105,12 @@ private:
      bool insertAsignacionesProcesadas(int numero);
 
     // FORMULAS
-
      double formulaSSO();
+
+     // SALARIO INTEGRAL Y SALARIO BASE
+     double getSalarioIntegralFromEmpleado(QString cedulaEmp, int nominaNum);
+     double getSalarioBaseFromEmpleado(QString cedulaEmp,int nominaNum);
+
 };
 
 #endif // NOMINAMODEL_H

@@ -6,7 +6,7 @@ AreaWidget::AreaWidget(QWidget *parent) :
     ui(new Ui::AreaWidget)
 {
     ui->setupUi(this);
-
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     model = new AreaModel("asignacion","127.0.0.1","nomina","root","19017070",3306);
 
     if (!model->isConected()){
@@ -19,6 +19,7 @@ AreaWidget::AreaWidget(QWidget *parent) :
 
 AreaWidget::~AreaWidget()
 {
+    delete model;
     delete ui;
 }
 

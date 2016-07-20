@@ -10,8 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = KenNomina
 TEMPLATE = app
-
-
+RC_FILE = myapp.rc
 SOURCES += main.cpp\
         mainwindow.cpp \
     usuario.cpp \
@@ -44,7 +43,13 @@ SOURCES += main.cpp\
     asignacion.cpp \
     areawidget.cpp \
     areamodel.cpp \
-    area.cpp
+    area.cpp \
+    empresamodel.cpp \
+    empresadialog.cpp \
+    anticipowidget.cpp \
+    anticipodialog.cpp \
+    anticipomodel.cpp \
+    anticipolistadialog.cpp
 
 HEADERS  += mainwindow.h \
     usuario.h \
@@ -77,7 +82,13 @@ HEADERS  += mainwindow.h \
     asignacion.h \
     areawidget.h \
     areamodel.h \
-    area.h
+    area.h \
+    empresamodel.h \
+    empresadialog.h \
+    anticipowidget.h \
+    anticipodialog.h \
+    anticipomodel.h \
+    anticipolistadialog.h
 
 FORMS    += mainwindow.ui \
     nominawidget.ui \
@@ -91,14 +102,24 @@ FORMS    += mainwindow.ui \
     deducciondialog.ui \
     asignacionwidget.ui \
     asignaciondialog.ui \
-    areawidget.ui
+    areawidget.ui \
+    empresadialog.ui \
+    anticipowidget.ui \
+    anticipodialog.ui \
+    anticipolistadialog.ui
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../LimeReport-master/build/5.6.0/win32/debug/lib/ -llimereport
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../LimeReport-master/build/5.6.0/win32/debug/lib/ -llimereport
-else:unix: LIBS += -L$$PWD/../LimeReport-master/build/5.6.0/win32/debug/lib/ -llimereport
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/ -llimereport
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/ -llimereport
+else:unix: LIBS += -L$$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/ -llimereport
 
-INCLUDEPATH += $$PWD/../LimeReport-master/include
-DEPENDPATH += $$PWD/../LimeReport-master/include
+INCLUDEPATH += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/include
+DEPENDPATH += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/include
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/liblimereport.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/liblimereport.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/limereport.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/limereport.lib
+else:unix: PRE_TARGETDEPS += $$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/liblimereport.a
 
 RESOURCES += \
     recursos.qrc

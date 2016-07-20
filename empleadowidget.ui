@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1224</width>
+    <width>1274</width>
     <height>492</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
     <widget class="QGroupBox" name="groupBox">
      <property name="minimumSize">
       <size>
-       <width>400</width>
+       <width>450</width>
        <height>0</height>
       </size>
      </property>
@@ -87,6 +87,12 @@
         </item>
         <item>
          <widget class="QTableView" name="empleadoTableView">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
@@ -587,6 +593,9 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="maximum">
             <double>999999999.990000009536743</double>
            </property>
@@ -603,6 +612,9 @@
           <widget class="QDoubleSpinBox" name="salarioDiaDoubleSpinBox">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
            </property>
            <property name="maximum">
             <double>999999999.990000009536743</double>
@@ -621,6 +633,9 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="maximum">
             <double>999999999.990000009536743</double>
            </property>
@@ -637,6 +652,9 @@
           <widget class="QDoubleSpinBox" name="salarioMesDoubleSpinBox">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="showGroupSeparator" stdset="0">
+            <bool>true</bool>
            </property>
            <property name="maximum">
             <double>999999999.990000009536743</double>
@@ -667,150 +685,133 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <widget class="QLabel" name="label_27">
+           <property name="text">
+            <string>Deducciónes Fijas:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="deduccFijaTableView">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="horizontalHeaderMinimumSectionSize">
+            <number>100</number>
+           </attribute>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderStretchLastSection">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <widget class="QLabel" name="label_27">
-             <property name="text">
-              <string>Deducciónes Fijas:</string>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTableView" name="deduccFijaTableView">
-             <property name="minimumSize">
+             <property name="sizeHint" stdset="0">
               <size>
-               <width>400</width>
-               <height>0</height>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
-             <property name="alternatingRowColors">
-              <bool>true</bool>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="agrDeduccFijPushButton">
+             <property name="text">
+              <string>Agregar</string>
              </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <attribute name="horizontalHeaderCascadingSectionResizes">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="horizontalHeaderMinimumSectionSize">
-              <number>100</number>
-             </attribute>
-             <attribute name="horizontalHeaderStretchLastSection">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="verticalHeaderCascadingSectionResizes">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="verticalHeaderStretchLastSection">
-              <bool>false</bool>
-             </attribute>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="agrDeduccFijPushButton">
-               <property name="text">
-                <string>Agregar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="eliminarDeduccFijaPushButton">
-               <property name="text">
-                <string>Eliminar</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QPushButton" name="eliminarDeduccFijaPushButton">
+             <property name="text">
+              <string>Eliminar</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_23">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <widget class="QLabel" name="deduccEventLabel">
+           <property name="text">
+            <string>Deducciónes Eventual:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="deduccEventTableView">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderStretchLastSection">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <widget class="QLabel" name="label_28">
+            <widget class="QPushButton" name="agrDeduccEvenPushButton">
              <property name="text">
-              <string>Deducciónes Eventual:</string>
+              <string>Agregar</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QTableView" name="deduccEventTableView">
-             <property name="minimumSize">
-              <size>
-               <width>400</width>
-               <height>0</height>
-              </size>
+            <widget class="QPushButton" name="eliminarDeduccEventPushButton">
+             <property name="text">
+              <string>Elimianr</string>
              </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <attribute name="horizontalHeaderCascadingSectionResizes">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="horizontalHeaderStretchLastSection">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="verticalHeaderCascadingSectionResizes">
-              <bool>true</bool>
-             </attribute>
-             <attribute name="verticalHeaderStretchLastSection">
-              <bool>false</bool>
-             </attribute>
             </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="agrDeduccEvenPushButton">
-               <property name="text">
-                <string>Agregar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="eliminarDeduccEventPushButton">
-               <property name="text">
-                <string>Elimianr</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
           </layout>
          </item>
@@ -824,120 +825,109 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_8">
        <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <widget class="QLabel" name="label_30">
+           <property name="text">
+            <string>Asignaciónes Fijas:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="asignFijaTableView">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <attribute name="horizontalHeaderCascadingSectionResizes">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QLabel" name="label_30">
-             <property name="text">
-              <string>Asignaciónes Fijas:</string>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QTableView" name="asignFijaTableView">
-             <property name="minimumSize">
+             <property name="sizeHint" stdset="0">
               <size>
-               <width>400</width>
-               <height>0</height>
+               <width>40</width>
+               <height>20</height>
               </size>
              </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="agrAsignFijPushButton">
+             <property name="text">
+              <string>Agregar</string>
              </property>
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="agrAsignFijPushButton">
-               <property name="text">
-                <string>Agregar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="EliminarAsignFijaPushButton">
-               <property name="text">
-                <string>Eliminar</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QPushButton" name="EliminarAsignFijaPushButton">
+             <property name="text">
+              <string>Eliminar</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
+          <widget class="QLabel" name="asignEventLabel">
+           <property name="text">
+            <string>Asignaciónes Eventual:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableView" name="asignEventTableView">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
-            <widget class="QLabel" name="label_29">
+            <widget class="QPushButton" name="agrAsignEvenPushButton">
              <property name="text">
-              <string>Asignaciónes Eventual:</string>
+              <string>Agregar</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QTableView" name="asignEventTableView">
-             <property name="minimumSize">
-              <size>
-               <width>400</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
+            <widget class="QPushButton" name="EliminarAsignEventPushButton">
+             <property name="text">
+              <string>Eliminar</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <spacer name="horizontalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="agrAsignEvenPushButton">
-               <property name="text">
-                <string>Agregar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="EliminarAsignEventPushButton">
-               <property name="text">
-                <string>Eliminar</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
            </item>
           </layout>
          </item>
@@ -951,14 +941,11 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_10">
        <item row="0" column="0">
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="nominaCargadaGroupBox">
          <property name="title">
           <string>Nominas Cargadas</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QTableView" name="tableView_6"/>
-          </item>
           <item row="1" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
@@ -986,11 +973,14 @@
             </item>
            </layout>
           </item>
+          <item row="0" column="0">
+           <widget class="QTableView" name="tableView_6"/>
+          </item>
          </layout>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="nominaProcesadaGroupBox">
          <property name="title">
           <string>Nominas Procesadas</string>
          </property>
@@ -1023,7 +1013,35 @@
            </layout>
           </item>
           <item row="0" column="0">
-           <widget class="QTableView" name="tableView_7"/>
+           <widget class="QTableView" name="nominaProcesadaTableView">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QAbstractScrollArea::AdjustIgnored</enum>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="textElideMode">
+             <enum>Qt::ElideMiddle</enum>
+            </property>
+            <property name="verticalScrollMode">
+             <enum>QAbstractItemView::ScrollPerItem</enum>
+            </property>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1035,20 +1053,6 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QPushButton" name="AnteriorPushButton">
-       <property name="text">
-        <string>&lt;&lt; Anterior</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="siguientePushButton">
-       <property name="text">
-        <string>Siguiente &gt;&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="agregarPushButton">
        <property name="text">
         <string>Agregar</string>
@@ -1059,13 +1063,6 @@
       <widget class="QPushButton" name="modificarPushButton">
        <property name="text">
         <string>modificar</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="guardarPushButton">
-       <property name="text">
-        <string>Guardar</string>
        </property>
       </widget>
      </item>

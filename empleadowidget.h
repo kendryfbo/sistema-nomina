@@ -4,9 +4,13 @@
 #include <QtCore>
 #include <QWidget>
 #include <QMessageBox>
+
 #include "deducciondialog.h"
 #include "asignaciondialog.h"
 #include "empleadomodel.h"
+#include "nominaprocesadawidget.h"
+#include "coduppercasevalidator.h"
+#include "uppercasevalidator.h"
 
 namespace Ui {
 class EmpleadoWidget;
@@ -22,6 +26,9 @@ public:
 
     explicit EmpleadoWidget(QWidget *parent = 0);
     ~EmpleadoWidget();
+
+    CodUpperCaseValidator codigoValidador;
+    UpperCaseValidator upperCaseValidador;
 
 private slots:
 
@@ -60,6 +67,10 @@ private slots:
     void on_EliminarAsignFijaPushButton_clicked();
 
     void on_EliminarAsignEventPushButton_clicked();
+
+    void on_nominaProcesadaTableView_doubleClicked(const QModelIndex &index);
+
+    void on_cedulaLineEdit_editingFinished();
 
 private:
     Ui::EmpleadoWidget *ui;
@@ -102,6 +113,7 @@ private:
     void updateDeduccEventTableView();
     void updateAsignFijaTableView();
     void updateAsignEventTableView();
+    void updateNomProcTableView();
 
     void updateCamposComboBox();
     void updateClasificacionComboBox();
@@ -115,6 +127,10 @@ private:
 
     void setValidadores();
     bool validarDatos();
+
+    void botonesDeTabla(bool sentinela);
+
+    void nominaProcesadaWidget(int nominaNum);
 };
 
 #endif // EMPLEADOWIDGET_H

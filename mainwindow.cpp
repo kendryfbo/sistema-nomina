@@ -28,11 +28,18 @@ MainWindow::~MainWindow()
 void MainWindow::prepareWindow()
 {
     //cargarStyleSheet();
+   //QObject::connect(nomProcesadaW,SIGNAL(destroyed(QObject*)),this,SLOT(updateTables()));
+   //QObject::connect(NomCargadaW,SIGNAL(destroyed(QObject*)),this,SLOT(updateTables()));
     nominaCargadaModel = new QSqlQueryModel(this);
     nominaProcesadaModel = new QSqlQueryModel(this);
+    anticipoModel = new QSqlQueryModel(this);
+
+
+
     loadDatosEmpleados();
     updateNominaCargadaTableView();
     updateNominaProcesadaTableView();
+    updateAnticipoTableView();
 }
 
 void MainWindow::cargarStyleSheet()
@@ -47,15 +54,24 @@ void MainWindow::cargarStyleSheet()
 void MainWindow::updateNominaCargadaTableView()
 {
     nominaCargadaModel->setQuery(model->findNominasCargadas());
+    ui->nominaCargadaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->nominaCargadaTableView->setModel(nominaCargadaModel);
-    //ui->nominaCargadaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void MainWindow::updateNominaProcesadaTableView()
 {
     nominaProcesadaModel->setQuery(model->findNominasProcesadas());
+    ui->nominaProcesadaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->nominaProcesadaTableView->setModel(nominaProcesadaModel);
-    //ui->nominaProcesadaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+}
+
+void MainWindow::updateAnticipoTableView()
+{
+    anticipoModel->setQuery(model->findAnticiposView());
+    ui->anticipoTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->anticipoTableView->setModel(anticipoModel);
+
 }
 
 void MainWindow::loadDatosEmpleados()
@@ -76,22 +92,55 @@ void MainWindow::nominaCargadaWidget()
 {
     int index = ui->nominaCargadaTableView->currentIndex().row();
     int nominaNum = nominaCargadaModel->record(index).value("numero").toInt();
-    NominaCargadaWidget* NomCargadaW = new NominaCargadaWidget(nominaNum,this);
+    NomCargadaW = new NominaCargadaWidget(nominaNum,this);
     NomCargadaW->setWindowFlags(Qt::Window);
     NomCargadaW->show();
-    updateNominaCargadaTableView();
-    updateNominaProcesadaTableView();
+    QObject::connect(NomCargadaW,SIGNAL(destroyed(QObject*)),this,SLOT(updateTables()));
+
 }
 
 void MainWindow::nominaProcesadaWidget()
 {
     int index = ui->nominaProcesadaTableView->currentIndex().row();
     int nominaNum = nominaProcesadaModel->record(index).value("numero").toInt();
-    NominaProcesadaWidget* nomProcesadaW = new NominaProcesadaWidget(nominaNum,this);
+    nomProcesadaW = new NominaProcesadaWidget(nominaNum,this);
     nomProcesadaW->setWindowFlags(Qt::Window);
     nomProcesadaW->show();
-    updateNominaCargadaTableView();
-    updateNominaProcesadaTableView();
+    QObject::connect(nomProcesadaW,SIGNAL(destroyed(QObject*)),this,SLOT(updateTables()));
+}
+
+void MainWindow::imprimirNomina()
+{
+    int index = ui->nominaCargadaTableView->currentIndex().row();
+    int nominaNum = nominaCargadaModel->record(index).value("numero").toInt();
+
+    ReportModel report;
+    report.nomina(nominaNum);
+}
+
+void MainWindow::eliminarNominaProcesada()
+{
+    int index = ui->nominaProcesadaTableView->currentIndex().row();
+    int nominaNum = nominaProcesadaModel->record(index).value("numero").toInt();
+
+    if (model->nominaProcesadaExiste(nominaNum))
+    {
+        QMessageBox msg;
+        msg.setModal(true);
+        msg.addButton(QMessageBox::Yes);
+        msg.addButton(QMessageBox::Cancel);
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.question(this,"Advertencia","¿Desea Eliminar Nomina Procesada? ") == QMessageBox::Yes){
+
+            if (model->deleteNominaProcesada(nominaNum))
+                QMessageBox::information(this,"Información",model->getStatusMessage(),QMessageBox::Ok);
+            else
+                QMessageBox::critical(this,"Error",model->getStatusMessage(),QMessageBox::Ok);
+        }
+        updateTables();
+    } else
+        QMessageBox::critical(this,"Error","Nomina No Encontrada",QMessageBox::Ok);
+
 }
 
 void MainWindow::cargarDatosUsuario(Usuario user)
@@ -118,8 +167,7 @@ void MainWindow::on_actionEmpleados_triggered()
     EmpleadoWidget* empeladoW = new EmpleadoWidget(this);
     empeladoW->setWindowFlags(Qt::Window);
     empeladoW->show();
-    updateNominaCargadaTableView();
-    updateNominaProcesadaTableView();
+    QObject::connect(empeladoW,SIGNAL(destroyed(QObject*)),this,SLOT(updateTables()));
 }
 
 void MainWindow::on_actionAsignaciones_triggered()
@@ -127,8 +175,7 @@ void MainWindow::on_actionAsignaciones_triggered()
     AsignacionWidget* asignacion = new AsignacionWidget(this);
     asignacion->setWindowFlags(Qt::Window);
     asignacion->show();
-    updateNominaCargadaTableView();
-    updateNominaProcesadaTableView();
+    updateTables();
 }
 
 void MainWindow::on_actionClasificaciones_triggered()
@@ -136,8 +183,7 @@ void MainWindow::on_actionClasificaciones_triggered()
     AreaWidget* clasificacion = new AreaWidget(this);
     clasificacion->setWindowFlags(Qt::Window);
     clasificacion->show();
-    updateNominaCargadaTableView();
-    updateNominaProcesadaTableView();
+    updateTables();
 }
 
 void MainWindow::on_actionNomina_triggered()
@@ -145,8 +191,7 @@ void MainWindow::on_actionNomina_triggered()
     NominaWidget* nominaModel = new NominaWidget(this);
     nominaModel->setWindowFlags(Qt::Window);
     nominaModel->show();
-    updateNominaCargadaTableView();
-    updateNominaProcesadaTableView();
+    updateTables();
 }
 
 void MainWindow::on_detalleNomProcPushButton_clicked()
@@ -180,5 +225,55 @@ void MainWindow::on_CargarNomPushButton_clicked()
 {
     NominaCargarDialog* cargarNominaD = new NominaCargarDialog(this);
     cargarNominaD->exec();
+    updateTables();
+}
+
+void MainWindow::updateTables()
+{
     updateNominaCargadaTableView();
+    updateNominaProcesadaTableView();
+    updateAnticipoTableView();
+    loadDatosEmpleados();
+}
+
+void MainWindow::on_EliminarNomProcPushButton_clicked()
+{
+    eliminarNominaProcesada();
+
+}
+
+void MainWindow::on_actionConfiguracion_triggered()
+{
+    empresaDialog* empresaD = new empresaDialog(this);
+    empresaD->setWindowFlags(Qt::Window);
+    empresaD->show();
+    updateNominaCargadaTableView();
+    updateNominaProcesadaTableView();
+}
+
+void MainWindow::on_CargarNomPushButton_2_clicked()
+{
+    AnticipoWidget* anticipoW = new AnticipoWidget(this);
+    anticipoW->setWindowFlags(Qt::Window);
+    anticipoW->show();
+     QObject::connect(anticipoW,SIGNAL(destroyed(QObject*)),this,SLOT(updateTables()));
+}
+
+void MainWindow::on_verAnticipoPushButton_clicked()
+{
+    ReportModel report;
+    int index = ui->anticipoTableView->currentIndex().row();
+    int anticipoId = anticipoModel->record(index).value("id").toInt();
+    report.anticipo(anticipoId);
+}
+
+void MainWindow::on_anticipoTableView_doubleClicked(const QModelIndex &index)
+{
+    (void) index;
+    on_verAnticipoPushButton_clicked();
+}
+
+void MainWindow::on_CargarNomPushButton_4_clicked()
+{
+
 }

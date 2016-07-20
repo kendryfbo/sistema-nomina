@@ -6,7 +6,7 @@ NominaWidget::NominaWidget(QWidget *parent) :
     ui(new Ui::NominaWidget)
 {
     ui->setupUi(this);
-
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     model = new NominaModel("nominaModel","127.0.0.1","nomina","root","19017070",3306);
 
     if (!model->isConected()){
@@ -51,6 +51,7 @@ void NominaWidget::prepareWidget()
     tableModel = new QSqlTableModel(this);
      setState(State::inicial);
      updateNominaTableView();
+     setValidadores();
 }
 
 void NominaWidget::setState(NominaWidget::State xstate)
@@ -80,6 +81,8 @@ void NominaWidget::stateAgregar()
     ui->deduccionDoubleSpinBox->setEnabled(true);
     ui->asignacionDoubleSpinBox->setEnabled(true);
 
+    ui->codigoLineEdit->clear();
+    ui->descripcionLineEdit->clear();
     ui->diasSpinBox->setValue(1);
     ui->salarioDoubleSpinBox->setValue(100);
     ui->deduccionDoubleSpinBox->setValue(100);
@@ -89,6 +92,7 @@ void NominaWidget::stateAgregar()
 
     ui->accionPushButton->setEnabled(true);
     ui->accionPushButton->setText("Agregar");
+
 }
 
 void NominaWidget::stateModificar()
@@ -213,9 +217,36 @@ void NominaWidget::updateNominaTableView(QString str)
                      this,SLOT(nominaTableViewSelectionChange()));
 }
 
+void NominaWidget::setValidadores()
+{
+    ui->codigoLineEdit->setValidator(&codigoValidador);
+    ui->descripcionLineEdit->setValidator(&upperCaseValidador);
+}
+
 bool NominaWidget::validarDatos()
 {
-    return true;
+    QString advertencias = "";
+
+    if (ui->diasSpinBox->value() <= 0)
+    {
+        advertencias = "- <b>Campo Dias debe ser mayor a 0<b> \n"+ advertencias;
+        ui->diasSpinBox->setFocus();
+    }
+     if (ui->descripcionLineEdit->text().isEmpty())
+     {
+         advertencias = "- <b>Campo Descripción no Puede estar en Blanco<b> \n"+ advertencias;
+         ui->descripcionLineEdit->setFocus();
+     }
+    if (ui->codigoLineEdit->text().isEmpty())
+    {
+        advertencias = "- <b>Campo Código no Puede estar en Blanco<b> \n"+ advertencias;
+        ui->codigoLineEdit->setFocus();
+    }
+    if (advertencias == "") return true;
+    else {
+        QMessageBox::warning(this,"Alerta",advertencias);
+        return false;
+    }
 }
 
 void NominaWidget::on_accionPushButton_clicked()

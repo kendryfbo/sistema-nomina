@@ -1,11 +1,15 @@
 #include "reportmodel.h"
 #include "LimeReport"
 
-const QString reportDir=":/Report";
+const QString reporteReciboDepagoPath="/reportes/ReciboDePago.lrxml";
+const QString reporteRecibosDepagoPath="/reportes/RecibosDePago.lrxml";
+const QString reporteAnticipoPath="/reportes/ReporteAnticipo.lrxml";
+const QString reporteNominaPath="/reportes/ReporteNomina.lrxml";
 
 ReportModel::ReportModel()
 {
     report = new LimeReport::ReportEngine();
+    rootPath = QApplication::applicationDirPath();
 }
 
 ReportModel::~ReportModel()
@@ -15,7 +19,8 @@ ReportModel::~ReportModel()
 
 void ReportModel::reciboEmpleado(int nominaNum, QString empCedula)
 {
-    report->loadFromFile(":/Reportes/Reportes/ReciboDePago.lrxml");
+    QString path = rootPath + reporteReciboDepagoPath;
+    report->loadFromFile(path);
     report->dataManager()->setReportVariable("nominaNum",nominaNum);
     report->dataManager()->setReportVariable("cedulaEmp",empCedula);
     report->setShowProgressDialog(true);
@@ -24,11 +29,11 @@ void ReportModel::reciboEmpleado(int nominaNum, QString empCedula)
 
 void ReportModel::recibosEmpleados(int nominaNum)
 {
-
-        report->loadFromFile(":/Reportes/Reportes/RecibosDePago.lrxml");
-        report->dataManager()->setReportVariable("nominaNum",nominaNum);
-        report->setShowProgressDialog(true);
-        report->previewReport();
+    QString path = rootPath + reporteRecibosDepagoPath;
+    report->loadFromFile(path);
+    report->dataManager()->setReportVariable("nominaNum",nominaNum);
+    report->setShowProgressDialog(true);
+    report->previewReport();
 
 
 
@@ -36,8 +41,18 @@ void ReportModel::recibosEmpleados(int nominaNum)
 
 void ReportModel::nomina(int nominaNum)
 {
-    report->loadFromFile(":/Reportes/Reportes/ReporteNomina.lrxml");
+    QString path = rootPath + reporteNominaPath;
+    report->loadFromFile(path);
     report->dataManager()->setReportVariable("nominaNum",nominaNum);
+    report->setShowProgressDialog(true);
+    report->previewReport();
+}
+
+void ReportModel::anticipo(int anticipoId)
+{
+    QString path = rootPath + reporteAnticipoPath;
+    report->loadFromFile(path);
+    report->dataManager()->setReportVariable("anticipoId",anticipoId);
     report->setShowProgressDialog(true);
     report->previewReport();
 }

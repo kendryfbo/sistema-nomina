@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QMessageBox>
 #include "nominamodel.h"
+#include "coduppercasevalidator.h"
+#include "uppercasevalidator.h"
 
 namespace Ui {
 class NominaWidget;
@@ -19,6 +21,9 @@ public:
 
     explicit NominaWidget(QWidget *parent = 0);
     ~NominaWidget();
+
+    CodUpperCaseValidator codigoValidador;
+    UpperCaseValidator upperCaseValidador;
 
 private slots:
 
@@ -46,7 +51,6 @@ private:
 
     void prepareWidget();
     void setState(State xstate);
-    void setValidators();
     void stateAgregar();
     void stateModificar();
     void stateInicial();

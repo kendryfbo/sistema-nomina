@@ -2,7 +2,7 @@
 
 Empleado::Empleado()
 {
-    xCedula = "19017070";
+    xCedula = "DEFAULT";
     xNombres = "nombres";
     xApellidos = "apellidos";
     xRif = "rif";
@@ -32,7 +32,6 @@ Empleado::Empleado()
     xSalarioDia = 718.5;
     xSalarioSemana =5029.5;
     xSalarioMes = 20118;
-
 }
 
 Empleado::Empleado(QString cedula, QString nombres, QString apellidos, QString rif, QString fechaNac,

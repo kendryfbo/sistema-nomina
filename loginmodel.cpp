@@ -85,6 +85,7 @@ bool LoginModel::matchUserPassword(QString user,QString password)
     query->exec();
     query->next();
     password= query->value(0).toString();
+
     query->prepare("SELECT user,password FROM "+TABLE_USUARIO+" where user='"+user+"' and password='"+password+"';");
 
     if (!query->exec())

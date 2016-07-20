@@ -4,4 +4,8 @@
         <file>Reportes/RecibosDePago.lrxml</file>
         <file>Reportes/ReporteNomina.lrxml</file>
     </qresource>
+    <qresource prefix="/Logos">
+        <file>KenNomina.ico</file>
+        <file>KenNomina.png</file>
+    </qresource>
 </RCC>

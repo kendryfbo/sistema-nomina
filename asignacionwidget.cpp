@@ -73,8 +73,8 @@ void AsignacionWidget::stateAgregar()
     ui->codigoLineEdit->setEnabled(true);
     ui->formulaComboBox->setEnabled(true);
     ui->formulaLabel->setEnabled(true);
-    ui->activoCheckBox->setEnabled(false);
-    ui->primaCheckBox->setEnabled(false);
+    ui->activoCheckBox->setEnabled(true);
+    ui->primaCheckBox->setEnabled(true);
     ui->activoCheckBox->setChecked(true);
     ui->primaCheckBox->setChecked(false);
     ui->codigoLineEdit->clear();
