@@ -63,13 +63,15 @@ bool VacacionModel::generateVacacion(Vacacion vacacion, int diasBono, int diasAj
 
     vacacion = findVacacionCargada(query->lastInsertId().toInt());
 
-    if (!insertVacacionCargadaDetalle(vacacion,diasBono,diasAjuste))
+    if (!insertVacacionCargadaDetalles(vacacion,diasBono,diasAjuste))
     {
         status = "ERROR al Generar vacacion:"+status;
         debugMessage(status);
         rollBack();
         return false;
     }
+
+    // falta insertar deducciones
 
     Commit();
     return true;
@@ -159,9 +161,33 @@ Vacacion VacacionModel::findVacacionCargada(int VacacionNum)
 
 }
 
-bool VacacionModel::insertVacacionCargadaDetalle(Vacacion vacacion, int diasBono, int diasAjuste)
+bool VacacionModel::insertVacacionCargadaDetalles(Vacacion vacacion, int diasBono, int diasAjuste)
 {
+    QStringList cedulas;
+    query->prepare("SELECT cedula FROM empleado WHERE cod_area=:area");
+    query->bindValue(":area",vacacion.getArea());
 
+    if (!query->exec()){
+        status = "ERROR al buscar empleados por Area. ERROR: "+query->lastError().text();
+        debugMessage(status);
+        return false;
+    } else {
+        while(query->next())
+        {
+            cedulas << query->value("cedula").toString();
+        }
+    }
+
+    for (int i=0; i<cedulas.size(); ++i){
+        if (!insertVacacionCargadaDetalleEmp(vacacion.getNumero(),cedulas[i],diasBono,diasAjuste))
+        {
+            status = "ERROR al Insertar Vacacion Cargada detalle: "+ status;
+            debugMessage(status);
+            return false;
+            break;
+        }
+    }
+    return true;
 }
 
 bool VacacionModel::insertVacacionCargadaDetalleEmp(int vacacionNum, QString empleadoCed, int diasBono, int diasAjuste)

@@ -32,27 +32,27 @@ private:
 
     QStringList findEmpeladosFromArea(QString areaCod);
 
-    // Insert, Update and Delete from table 'vacacioncargada'
+    // Insert and Delete from table 'vacacioncargada'
     bool insertVacacionCargada(Vacacion vacacion);
     bool deleteVacacionCargada(int vacacionNum);
-
     Vacacion findVacacionCargada(int VacacionNum);
 
-    // Procesar todos los empleados mediante el area de las vacaciones
-    bool insertVacacionCargadaDetalle(Vacacion vacacion,int diasBono,int diasAjuste); // falta por implementar
 
+    // Cargar todos los empleados que pertenecen al area de las vacaciones
+    bool insertVacacionCargadaDetalles(Vacacion vacacion,int diasBono,int diasAjuste);
     // Insert, Update and Delete from table 'vacaciondetalle'
-    bool insertVacacionCargadaDetalleEmp(int vacacionNum,QString empleadoCed,int diasBono,int diasAjuste); // falta por implementar
-
+    bool insertVacacionCargadaDetalleEmp(int vacacionNum,QString empleadoCed,int diasBono,int diasAjuste);
 
     /* Para futuras mejoras en donde se puedan eliminar empleados de las vacaciones cargadas
      * deleteVacacionDetalleCargada();
      */
 
     // Insert, Update and Delete from table 'vacaciondetallededuccion'
-    insertDeduccionCargadaDetalle(); // falta por implementar
-    updateDeduccionCargadaDetalle(); // falta por implementar
-    deleteDeduccionCargadaDetalle(); // falta por implementar
+    insertVacacionCargadaDeducciones(); // falta por implementar
+    // Insert, Update and Delete from table 'vacaciondetallededuccion'
+    insertVacacionCargadaDeduccion(); // falta por implementar
+    updateVacacionCargadaDeduccion(); // falta por implementar
+    deleteVacacionCargadaDeduccion(); // falta por implementar
 
     // Obtener Montos de bono Vacacional y Ajuste Salarial
     double getBonoVacacional(int vacacionNum,QString empleadoCed); // falta por implementar
