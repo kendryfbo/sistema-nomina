@@ -11,6 +11,7 @@
 #include "nominaprocesadawidget.h"
 #include "coduppercasevalidator.h"
 #include "uppercasevalidator.h"
+#include "aportefaovinsertdialog.h"
 
 namespace Ui {
 class EmpleadoWidget;
@@ -72,6 +73,10 @@ private slots:
 
     void on_cedulaLineEdit_editingFinished();
 
+    void on_aporteFaovAgregarPushButton_clicked();
+
+    void on_aporteFaovEliminarPushButton_clicked();
+
 private:
     Ui::EmpleadoWidget *ui;
     State state;
@@ -86,7 +91,7 @@ private:
     QSqlQueryModel* asignFijaModel;
     QSqlQueryModel* asignEventModel;
     QSqlQueryModel* nominaModel;
-
+    QSqlQueryModel* aporteFaovModel;
 
 
     void prepareWidget();
@@ -104,6 +109,7 @@ private:
     void cargarDeduccionesEmpelado();
     void cargarAsignacionesEmpelado();
     void cargarNominasEmpelado();
+    void cargarAporteFaovEmpleado();
 
     Empleado descargarEmpleado();
 
@@ -114,6 +120,7 @@ private:
     void updateAsignFijaTableView();
     void updateAsignEventTableView();
     void updateNomProcTableView();
+    void updateAporteFaovTableView();
 
     void updateCamposComboBox();
     void updateClasificacionComboBox();

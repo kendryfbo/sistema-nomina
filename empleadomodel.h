@@ -55,6 +55,18 @@ public:
     Clasificacion findClasificacion(QString codigo);
     QSqlQuery findClasificaciones(QString area);
 
+
+    // MODULO - REGISTRO DE APORTE AL FAOV
+
+    bool insertAporte(QString cedulaEmp,QString descripcion,double aporteEmp,double aportePatron);
+    bool updateAporte(int numeroAporte,QString cedulaEmp,QString descripcion,double aporteEmp,double aportePatron);
+    bool deleteAporte(int numeroAporte,QString cedulaEmp);
+
+    QSqlQuery findAportesEmpleado(QString cedulaEmp);
+    QSqlQuery findResumAporteEmpleado(QString cedulaEmp);
+
+
+
 private:
 
 };

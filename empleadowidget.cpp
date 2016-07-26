@@ -45,6 +45,7 @@ void EmpleadoWidget::prepareWidget()
     asignFijaModel = new QSqlQueryModel(this);
     asignEventModel = new QSqlQueryModel(this);
     nominaModel = new QSqlQueryModel(this);
+    aporteFaovModel = new QSqlQueryModel(this);
 
     updateCamposComboBox();
     setState(State::inicial);
@@ -87,6 +88,7 @@ void EmpleadoWidget::stateAgregar()
     ui->deduccTab->setEnabled(false);
     ui->asingnTab->setEnabled(false);
     ui->nominaTab->setEnabled(false);
+    ui->aporteFaovTab->setEnabled(false);
 
     botonesDeTabla(false);
 
@@ -140,6 +142,7 @@ void EmpleadoWidget::stateModificar()
     ui->deduccTab->setEnabled(false);
     ui->asingnTab->setEnabled(false);
     ui->nominaTab->setEnabled(false);
+    ui->aporteFaovTab->setEnabled(false);
 
     botonesDeTabla(false);
 
@@ -163,6 +166,7 @@ void EmpleadoWidget::stateInicial()
     ui->deduccTab->setEnabled(true);
     ui->asingnTab->setEnabled(true);
     ui->nominaTab->setEnabled(true);
+    ui->aporteFaovTab->setEnabled(true);
 
     botonesDeTabla(true);
 
@@ -231,6 +235,8 @@ void EmpleadoWidget::cargarEmpleado()
     cargarDeduccionesEmpelado();
     cargarAsignacionesEmpelado();
     cargarNominasEmpelado();
+    cargarAporteFaovEmpleado();
+
 
 }
 
@@ -311,6 +317,11 @@ void EmpleadoWidget::cargarAsignacionesEmpelado()
 void EmpleadoWidget::cargarNominasEmpelado()
 {
     updateNomProcTableView();
+}
+
+void EmpleadoWidget::cargarAporteFaovEmpleado()
+{
+    updateAporteFaovTableView();
 }
 
 Empleado EmpleadoWidget::descargarEmpleado()
@@ -402,6 +413,13 @@ void EmpleadoWidget::updateNomProcTableView()
     nominaModel->setQuery(model->findNominaProcesada(empleado.getCedula()));
     ui->nominaProcesadaTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->nominaProcesadaTableView->setModel(nominaModel);
+}
+
+void EmpleadoWidget::updateAporteFaovTableView()
+{
+    aporteFaovModel->setQuery(model->findAportesEmpleado(empleado.getCedula()));
+    ui->aporteFaovTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->aporteFaovTableView->setModel(aporteFaovModel);
 }
 
 void EmpleadoWidget::on_agregarPushButton_clicked()
@@ -706,5 +724,42 @@ void EmpleadoWidget::on_cedulaLineEdit_editingFinished()
         ui->cedulaLineEdit->blockSignals(false);
         ui->cedulaLineEdit->setFocus();
         ui->cedulaLineEdit->clear();
+    }
+}
+
+void EmpleadoWidget::on_aporteFaovAgregarPushButton_clicked()
+{
+    aporteFaovInsertDialog* aporteFaovDialog = new aporteFaovInsertDialog(this);
+
+    if (aporteFaovDialog->exec() == QDialog::Accepted)
+    {
+        if (!model->insertAporte(empleado.getCedula(),
+                            aporteFaovDialog->getDescripcion(),
+                            aporteFaovDialog->getAporteEmpleado(),
+                            aporteFaovDialog->getAportePatron()))
+        {
+            QMessageBox::warning(this,"ERROR",model->getStatusMessage());
+        } else
+            cargarAporteFaovEmpleado();
+
+    }
+}
+
+void EmpleadoWidget::on_aporteFaovEliminarPushButton_clicked()
+{
+    int row = ui->aporteFaovTableView->currentIndex().row();
+    if (!(row < 0))
+    {
+        int numero = aporteFaovModel->record(row).value("numero").toInt();
+        QMessageBox msg;
+        msg.setModal(true);
+        msg.addButton(QMessageBox::Yes);
+        msg.addButton(QMessageBox::Cancel);
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.question(this,"Advertencia","¿Desea Eliminar Aporte de Faov? ") == QMessageBox::Yes){
+            model->deleteAporte(numero,empleado.getCedula());
+            QMessageBox::information(this,"Información",model->getStatusMessage(),QMessageBox::Ok);
+            cargarAporteFaovEmpleado();
+        }
     }
 }

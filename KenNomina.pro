@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     anticipowidget.cpp \
     anticipodialog.cpp \
     anticipomodel.cpp \
-    anticipolistadialog.cpp
+    anticipolistadialog.cpp \
+    aportefaovinsertdialog.cpp
 
 HEADERS  += mainwindow.h \
     usuario.h \
@@ -88,7 +89,8 @@ HEADERS  += mainwindow.h \
     anticipowidget.h \
     anticipodialog.h \
     anticipomodel.h \
-    anticipolistadialog.h
+    anticipolistadialog.h \
+    aportefaovinsertdialog.h
 
 FORMS    += mainwindow.ui \
     nominawidget.ui \
@@ -106,7 +108,8 @@ FORMS    += mainwindow.ui \
     empresadialog.ui \
     anticipowidget.ui \
     anticipodialog.ui \
-    anticipolistadialog.ui
+    anticipolistadialog.ui \
+    aportefaovinsertdialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/ -llimereport
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../limereport_1_3_11/build/5.6.0/win32/release/lib/ -llimereport
