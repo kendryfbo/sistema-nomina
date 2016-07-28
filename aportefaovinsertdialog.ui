@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>449</width>
-    <height>177</height>
+    <height>157</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,7 +79,7 @@
         <item>
          <widget class="QLabel" name="label_22">
           <property name="text">
-           <string>   Aporte Patrono:</string>
+           <string>   Aporte de Prestacion:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -115,44 +115,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_10">
-        <item>
-         <widget class="QLabel" name="label_28">
-          <property name="text">
-           <string>Aporte Empleado:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="aportePatronDoubleSpinBox">
-          <property name="minimumSize">
-           <size>
-            <width>150</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximum">
-           <double>999999.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
+       <layout class="QHBoxLayout" name="horizontalLayout_10"/>
       </item>
      </layout>
     </widget>
@@ -162,7 +125,6 @@
  <tabstops>
   <tabstop>descripcionLineEdit</tabstop>
   <tabstop>aporteEmpDoubleSpinBox</tabstop>
-  <tabstop>aportePatronDoubleSpinBox</tabstop>
   <tabstop>aceptarPushButton</tabstop>
   <tabstop>cancelarPushButton</tabstop>
  </tabstops>

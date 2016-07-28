@@ -56,10 +56,10 @@ public:
     QSqlQuery findClasificaciones(QString area);
 
 
-    // MODULO - REGISTRO DE APORTE AL FAOV
+    // MODULO - REGISTRO DE APORTE DE PRESTACIONES SOCIALES
 
-    bool insertAporte(QString cedulaEmp,QString descripcion,double aporteEmp,double aportePatron);
-    bool updateAporte(int numeroAporte,QString cedulaEmp,QString descripcion,double aporteEmp,double aportePatron);
+    bool insertAporte(QString cedulaEmp,QString descripcion,double aporte);
+    bool updateAporte(int numeroAporte,QString cedulaEmp,QString descripcion,double aporte);
     bool deleteAporte(int numeroAporte,QString cedulaEmp);
 
     QSqlQuery findAportesEmpleado(QString cedulaEmp);

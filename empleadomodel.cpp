@@ -8,9 +8,9 @@ const QString TABLE_AREA= "area";
 const QString TABLE_CLASIFIC = "clasificacion";
 const QString TABLE_NOMINAPROCESADADETALLERESUMVIEW = "nominaprocesadadetalleresumview";
 
-const QString TABLE_APORTEFAOV = "aportefaov";
-const QString TABLE_APORTEFAOVVIEW = "aportefaovview";
-const QString TABLE_APORTEFAOVRESUMVIEW = "aportefaovresumview";
+const QString TABLE_APORTEPREST = "aporteprestacion";
+const QString TABLE_APORTEPRESTVIEW = "aporteprestacionview";
+const QString TABLE_APORTEPRESTRESUMVIEW = "aporteprestacionresumview";
 
 EmpleadoModel::EmpleadoModel(connDB conn)
 {
@@ -535,41 +535,39 @@ QSqlQuery EmpleadoModel::findClasificaciones(QString area)
     return *query;
 }
 
-bool EmpleadoModel::insertAporte(QString cedulaEmp, QString descripcion, double aporteEmp, double aportePatron)
+bool EmpleadoModel::insertAporte(QString cedulaEmp, QString descripcion, double aporte)
 {
-    query->prepare("INSERT INTO "+TABLE_APORTEFAOV+" (numero,ced_empleado,descripcion,aporte_emp,aporte_patron,fecha_creac)"
-                                                   " VALUES (NULL,:ced_empleado,:descripcion,:aporte_emp,:aporte_patron,CURDATE())");
+    query->prepare("INSERT INTO "+TABLE_APORTEPREST+" (numero,ced_empleado,descripcion,aporte,fecha_creac)"
+                                                   " VALUES (NULL,:ced_empleado,:descripcion,:aporte,CURDATE())");
     query->bindValue(":ced_empleado",cedulaEmp);
     query->bindValue(":descripcion",descripcion);
-    query->bindValue(":aporte_emp",aporteEmp);
-    query->bindValue(":aporte_patron",aportePatron);
+    query->bindValue(":aporte",aporte);
 
     if (!query->exec())
     {
-        status = "Error al Insertar Aporte de Faov. ERROR: " + query->lastError().text();
+        status = "Error al Insertar Aporte de Prestacion ERROR: " + query->lastError().text();
         debugMessage(status);
         return false;
     }else {
-        status = "Aporte de Faov Insertado Exitosamente...";
+        status = "Aporte de Prestacion Insertado Exitosamente...";
         debugMessage(status);
         return true;
     }
 }
 
-bool EmpleadoModel::updateAporte(int numeroAporte, QString cedulaEmp, QString descripcion, double aporteEmp, double aportePatron)
+bool EmpleadoModel::updateAporte(int numeroAporte, QString cedulaEmp, QString descripcion, double aporte)
 {
-    query->prepare("UPDATE "+TABLE_APORTEFAOV+" SET ,descripcion=:descripcion,ced_empleado=:ced_empleado,,aporte_emp=:aporte_emp,aporte_patron=:aporte_patron,fecha_creac=CURDATE())"
+    query->prepare("UPDATE "+TABLE_APORTEPREST+" SET ,descripcion=:descripcion,ced_empleado=:ced_empleado,,aporte=:aporte, fecha_creac=CURDATE())"
                                               " WHERE numero=:numero AND cedula=:cedula");
 
     query->bindValue(":numero",numeroAporte);
     query->bindValue(":ced_empleado",cedulaEmp);
     query->bindValue(":descripcion",descripcion);
-    query->bindValue(":aporte_emp",aporteEmp);
-    query->bindValue(":aporte_patron",aportePatron);
+    query->bindValue(":aporte",aporte);
 
     if (!query->exec())
     {
-        status = "Error al Actualizar Aporte de Faov. ERROR: " + query->lastError().text();
+        status = "Error al Actualizar Aporte de Prestacion. ERROR: " + query->lastError().text();
         debugMessage(status);
         return false;
     }else {
@@ -581,14 +579,14 @@ bool EmpleadoModel::updateAporte(int numeroAporte, QString cedulaEmp, QString de
 
 bool EmpleadoModel::deleteAporte(int numeroAporte, QString cedulaEmp)
 {
-    query->prepare("DELETE FROM "+TABLE_APORTEFAOV+" WHERE numero=:numero AND ced_empleado=:ced_empleado");
+    query->prepare("DELETE FROM "+TABLE_APORTEPREST+" WHERE numero=:numero AND ced_empleado=:ced_empleado");
 
     query->bindValue(":numero",numeroAporte);
     query->bindValue(":ced_empleado",cedulaEmp);
 
     if (!query->exec())
     {
-        status = "Error al Eliminar Aporte de Faov. ERROR: " + query->lastError().text();
+        status = "Error al Eliminar Aporte de Prestacion. ERROR: " + query->lastError().text();
         debugMessage(status);
         return false;
     }else {
@@ -600,21 +598,21 @@ bool EmpleadoModel::deleteAporte(int numeroAporte, QString cedulaEmp)
 
 QSqlQuery EmpleadoModel::findAportesEmpleado(QString cedulaEmp)
 {
-    query->prepare("SELECT * FROM "+TABLE_APORTEFAOV+" WHERE ced_empleado=:ced_empleado");
+    query->prepare("SELECT * FROM "+TABLE_APORTEPREST+" WHERE ced_empleado=:ced_empleado");
 
     query->bindValue(":ced_empleado",cedulaEmp);
 
     if (!query->exec())
     {
-        status = "Error al Buscar Aporte de Faov empleado. ERROR: " + query->lastError().text();
+        status = "Error al Buscar Aporte de Prestacion empleado. ERROR: " + query->lastError().text();
         debugMessage(status);
     } else if (!query->next())
     {
-        status = "Empleado no posee Aporte de Faov.";
+        status = "Empleado no posee Aporte de Prestacion.";
         debugMessage(status);
 
     } else {
-        status = "Busqueda de Aporte de Faov Empleado Realizada Exitosamente...";
+        status = "Busqueda de Aporte de Prestacion Empleado Realizada Exitosamente...";
         debugMessage(status);
     }
     return *query;

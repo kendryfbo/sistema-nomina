@@ -105,11 +105,14 @@ private:
      bool insertAsignacionesProcesadas(int numero);
 
     // FORMULAS
-     double formulaSSO();
+     double formulaSSO(double salario);
 
      // SALARIO INTEGRAL Y SALARIO BASE
      double getSalarioIntegralFromEmpleado(QString cedulaEmp, int nominaNum);
      double getSalarioBaseFromEmpleado(QString cedulaEmp,int nominaNum);
+
+     //REGISTRO DE APORTE DE PRESTACIONES SOCIALES
+     bool insertAportePrestaciones();
 
 };
 

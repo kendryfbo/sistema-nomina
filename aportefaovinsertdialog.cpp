@@ -18,14 +18,9 @@ QString aporteFaovInsertDialog::getDescripcion() const
     return descripcion;
 }
 
-double aporteFaovInsertDialog::getAportePatron() const
+double aporteFaovInsertDialog::getAporte() const
 {
-    return aportePatron;
-}
-
-double aporteFaovInsertDialog::getAporteEmpleado() const
-{
-    return aporteEmpleado;
+    return aporte;
 }
 
 void aporteFaovInsertDialog::on_aceptarPushButton_clicked()
@@ -33,8 +28,7 @@ void aporteFaovInsertDialog::on_aceptarPushButton_clicked()
     if (validarDatos())
     {
         descripcion = ui->descripcionLineEdit->text();
-        aporteEmpleado = ui->aporteEmpDoubleSpinBox->value();
-        aportePatron = ui->aportePatronDoubleSpinBox->value();
+        aporte = ui->aporteEmpDoubleSpinBox->value();
         accept();
     }
 }

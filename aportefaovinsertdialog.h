@@ -17,14 +17,12 @@ public:
     ~aporteFaovInsertDialog();
 
     QString getDescripcion() const;
-    double getAportePatron() const;
-    double getAporteEmpleado() const;
+    double getAporte() const;
 
 private slots:
 
 
     void on_aceptarPushButton_clicked();
-
     void on_cancelarPushButton_clicked();
 
 private:
@@ -35,8 +33,7 @@ private:
     bool validarDatos();
 
     QString descripcion;
-    double aportePatron;
-    double aporteEmpleado;
+    double aporte;
 };
 
 #endif // APORTEFAOVINSERTDIALOG_H

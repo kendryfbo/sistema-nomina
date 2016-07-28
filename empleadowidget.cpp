@@ -735,8 +735,7 @@ void EmpleadoWidget::on_aporteFaovAgregarPushButton_clicked()
     {
         if (!model->insertAporte(empleado.getCedula(),
                             aporteFaovDialog->getDescripcion(),
-                            aporteFaovDialog->getAporteEmpleado(),
-                            aporteFaovDialog->getAportePatron()))
+                            aporteFaovDialog->getAporte()))
         {
             QMessageBox::warning(this,"ERROR",model->getStatusMessage());
         } else
@@ -756,7 +755,7 @@ void EmpleadoWidget::on_aporteFaovEliminarPushButton_clicked()
         msg.addButton(QMessageBox::Yes);
         msg.addButton(QMessageBox::Cancel);
         msg.setDefaultButton(QMessageBox::Yes);
-        if (msg.question(this,"Advertencia","¿Desea Eliminar Aporte de Faov? ") == QMessageBox::Yes){
+        if (msg.question(this,"Advertencia","¿Desea Eliminar Aporte de Prestacion? ") == QMessageBox::Yes){
             model->deleteAporte(numero,empleado.getCedula());
             QMessageBox::information(this,"Información",model->getStatusMessage(),QMessageBox::Ok);
             cargarAporteFaovEmpleado();
