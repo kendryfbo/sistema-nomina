@@ -85,17 +85,26 @@ bool AsignacionModel::updateAsignacion(Asignacion asignacion)
 
 bool AsignacionModel::DeleteAsignacion(QString codigo)
 {
-    query->prepare("DELETE FROM "+TABLE_ASIGNACION+" WHERE codigo='"+codigo+"';");
 
-    if (!query->exec()){
-        status = "Error al Eliminar Concepto de Asignación: " + query->lastError().text();
+    // coomprobar por el tamaño del codigo si es una deduccion Creada por defecto para los reportes
+    if (codigo.length() < 6)
+    {
+        query->prepare("DELETE FROM "+TABLE_ASIGNACION+" WHERE codigo='"+codigo+"';");
+
+        if (!query->exec()){
+            status = "Error al Eliminar Concepto de Asignación: " + query->lastError().text();
+            debugMessage(status);
+            debugMessage(query->executedQuery());
+            return false;
+        }else {
+            status = "Concepto de Asignación Eliminado Exitosamente...";
+            debugMessage(status);
+            return true;
+        }
+    } else {
+        status = "Asignacion no puede ser Eliminada.";
         debugMessage(status);
-        debugMessage(query->executedQuery());
         return false;
-    }else {
-        status = "Concepto de Asignación Eliminado Exitosamente...";
-        debugMessage(status);
-        return true;
     }
 }
 

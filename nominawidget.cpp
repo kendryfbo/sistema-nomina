@@ -195,7 +195,7 @@ void NominaWidget::eliminarNomina()
     QString codigo = ui->codigoLineEdit->text();
     QString descripcion = ui->descripcionLineEdit->text();
 
-    if (msg.question(this,"¿Pregunta?","¿Desea Eliminar Asignación? \nCodigo: " + codigo +"\n"
+    if (msg.question(this,"¿Pregunta?","¿Desea Eliminar Nomina? \nCodigo: " + codigo +"\n"
                          + "Descripcion: " +descripcion) == QMessageBox::Yes){
 
         model->deleteModeloNomina(codigo);

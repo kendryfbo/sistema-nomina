@@ -242,6 +242,10 @@ void NominaCargadaWidget::on_anticipoPushButton_clicked()
     if (anticipoDialog->exec()){
         if (!model->cargarAnticipos(anticipoDialog->getAnticipoId(),nomina.getNumero())){
                 QMessageBox::warning(this,"ERROR",model->getStatusMessage());
-        }
+        } else
+            updateEmpleadosTableView();
+
+
     }
+
 }

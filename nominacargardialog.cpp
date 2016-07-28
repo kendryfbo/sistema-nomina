@@ -156,3 +156,11 @@ void NominaCargarDialog::on_cargarNominaPushButton_clicked()
 {
     cargarNomina();
 }
+
+void NominaCargarDialog::on_prestacionGroupBox_toggled(bool arg1)
+{
+    if (arg1)
+        ui->prestacionGroupBox->setEnabled(true);
+    else
+        ui->prestacionGroupBox->setEnabled(false);
+}

@@ -61,13 +61,17 @@ private slots:
 
     void on_actionConfiguracion_triggered();
 
-    void on_CargarNomPushButton_2_clicked();
+    void on_generarAnticipoPushButton_clicked();
 
     void on_verAnticipoPushButton_clicked();
 
     void on_anticipoTableView_doubleClicked(const QModelIndex &index);
 
     void on_CargarNomPushButton_4_clicked();
+
+    void on_eliminarAnticipoPushButton_clicked();
+
+    void on_eliminarNomCargadaPushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -101,6 +105,7 @@ private:
     void imprimirNomina();
 
     void eliminarNominaProcesada();
+    void eliminarNominaCargada();
 };
 
 #endif // MAINWINDOW_H

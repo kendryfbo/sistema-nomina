@@ -143,6 +143,30 @@ void MainWindow::eliminarNominaProcesada()
 
 }
 
+void MainWindow::eliminarNominaCargada()
+{
+    int index = ui->nominaCargadaTableView->currentIndex().row();
+    int nominaNum = nominaCargadaModel->record(index).value("numero").toInt();
+
+    if (model->nominaExiste(nominaNum))
+    {
+        QMessageBox msg;
+        msg.setModal(true);
+        msg.addButton(QMessageBox::Yes);
+        msg.addButton(QMessageBox::Cancel);
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.question(this,"Advertencia","¿Desea Eliminar Nomina Cargada? ") == QMessageBox::Yes){
+
+            if (model->deleteNominaCargada(nominaNum))
+                QMessageBox::information(this,"Información",model->getStatusMessage(),QMessageBox::Ok);
+            else
+                QMessageBox::critical(this,"Error",model->getStatusMessage(),QMessageBox::Ok);
+        }
+        updateTables();
+    } else
+        QMessageBox::critical(this,"Error","Nomina No Encontrada",QMessageBox::Ok);
+}
+
 void MainWindow::cargarDatosUsuario(Usuario user)
 {
     usuario = user;
@@ -251,7 +275,7 @@ void MainWindow::on_actionConfiguracion_triggered()
     updateNominaProcesadaTableView();
 }
 
-void MainWindow::on_CargarNomPushButton_2_clicked()
+void MainWindow::on_generarAnticipoPushButton_clicked()
 {
     AnticipoWidget* anticipoW = new AnticipoWidget(this);
     anticipoW->setWindowFlags(Qt::Window);
@@ -276,4 +300,31 @@ void MainWindow::on_anticipoTableView_doubleClicked(const QModelIndex &index)
 void MainWindow::on_CargarNomPushButton_4_clicked()
 {
 
+}
+
+void MainWindow::on_eliminarAnticipoPushButton_clicked()
+{
+    AnticipoModel anticipo("anticipoMainWindow","127.0.0.1","nomina","root","19017070",3306);
+    int index = ui->anticipoTableView->currentIndex().row();
+    int anticipoId = anticipoModel->record(index).value("id").toInt();
+
+    QMessageBox msg;
+    msg.setModal(true);
+    msg.addButton(QMessageBox::Yes);
+    msg.addButton(QMessageBox::Cancel);
+    msg.setDefaultButton(QMessageBox::Yes);
+    if (msg.question(this,"Advertencia","¿Desea Eliminar Anticipo seleccionado? ") == QMessageBox::Yes){
+
+        if (anticipo.deleteAnticipo(anticipoId))
+            QMessageBox::information(this,"Información",anticipo.getStatusMessage(),QMessageBox::Ok);
+        else
+            QMessageBox::critical(this,"Error",anticipo.getStatusMessage(),QMessageBox::Ok);
+    }
+    updateTables();
+
+}
+
+void MainWindow::on_eliminarNomCargadaPushButton_clicked()
+{
+    eliminarNominaCargada();
 }

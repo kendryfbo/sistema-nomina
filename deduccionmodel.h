@@ -22,7 +22,7 @@ public:
 
     bool insertDeduccion(Deduccion deduccion);
     bool updateDeduccion(Deduccion deduccion);
-    bool DeleteDeduccion(QString  codigo);
+    bool DeleteDeduccion(QString codigo);
 
     bool deduccionExist(QString codigo);
     Deduccion findDeduccion(QString codigo);

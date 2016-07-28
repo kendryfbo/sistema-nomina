@@ -24,9 +24,10 @@ public:
     bool updateAnticipoTemp(QString cedula,double valor);
     bool clearAnticipoTemp();
 
-    bool deleteAnticipo(int anticipoId);
+
     bool insertAnticipo(QString descripcion,QString area,int dias=0,double porcentaje=100);
     bool updateAnticipoDetalle(int id,QString cedula,bool procesado);
+    bool deleteAnticipo(int anticipoId);
 
     QSqlQuery findAnticiposView(QString descripcion="");
     QSqlQuery findAnticiposEmpleado(QString cedula="",bool procesado=false);

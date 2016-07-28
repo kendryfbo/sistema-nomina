@@ -613,6 +613,7 @@ bool NominaModel::cargarAnticipos(int anticipoId, int nominaNum)
     query->prepare("SELECT * FROM "+TABLE_ANTICIPODETALLEVIEW+" WHERE id=:id");
     query->bindValue(":id",anticipoId);
 
+
     if (!query->exec())
     {
         status = "ERROR al Buscar empleados en anticipo Numero: "+QString::number(anticipoId)+". ERROR: "+query->lastError().text();
@@ -620,6 +621,9 @@ bool NominaModel::cargarAnticipos(int anticipoId, int nominaNum)
         rollBack();
         return false;
     } else {
+        debugMessage(query->executedQuery());
+        debugMessage(QString::number(query->size()));
+
         while (query->next())
         {
             QString cedula = query->value("cedula").toString();
@@ -1070,21 +1074,23 @@ bool NominaModel::deleteAsignacionCargada(QString asignacionCod, QString empCedu
 
 bool NominaModel::insertDeduccionDeAnticipoNomCargada(QString cedulaEmp,QString descripcion,double monto,int anticipoID, int nominaNum)
 {
+    QSqlQuery queryTemp(conexion.db);
+
     QString codigo = "ANTCP"+QString::number(anticipoID);
     int cantidad = 1;
-    query->prepare("INSERT INTO "+TABLE_DEDUCCIONCARGADA+" ("
+    queryTemp.prepare("INSERT INTO "+TABLE_DEDUCCIONCARGADA+" ("
                                    "numero,cod_deduc,ced_emp,descripcion,cantidad,valor) VALUES ("
                                                          ":numero,:cod_deduc,:ced_emp,:descripcion,:cantidad,:valor)");
-    query->bindValue(":numero",nominaNum);
-    query->bindValue(":cod_deduc",codigo);
-    query->bindValue(":ced_emp",cedulaEmp);
-    query->bindValue(":descripcion",descripcion);
-    query->bindValue(":cantidad",cantidad);
-    query->bindValue(":valor",monto);
+    queryTemp.bindValue(":numero",nominaNum);
+    queryTemp.bindValue(":cod_deduc",codigo);
+    queryTemp.bindValue(":ced_emp",cedulaEmp);
+    queryTemp.bindValue(":descripcion",descripcion);
+    queryTemp.bindValue(":cantidad",cantidad);
+    queryTemp.bindValue(":valor",monto);
 
-    if (!query->exec())
+    if (!queryTemp.exec())
     {
-        status = "ERROR al cargar anticipo en deduccion. ERROR: "+query->lastError().text();
+        status = "ERROR al cargar anticipo en deduccion. ERROR: "+queryTemp.lastError().text();
         debugMessage(status);
         return false;
     }else

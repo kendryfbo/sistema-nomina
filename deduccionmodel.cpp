@@ -83,17 +83,25 @@ bool DeduccionModel::updateDeduccion(Deduccion deduccion)
 
 bool DeduccionModel::DeleteDeduccion(QString codigo)
 {
-    query->prepare("DELETE FROM "+TABLE_DEDUCCION+" WHERE codigo='"+codigo+"';");
+    // coomprobar por el tamaño del codigo si es una deduccion Creada por defecto para los reportes
+    if (codigo.length() < 6)
+    {
+        query->prepare("DELETE FROM "+TABLE_DEDUCCION+" WHERE codigo='"+codigo+"';");
 
-    if (!query->exec()){
-        status = "Error al Eliminar Concepto de Deducción: " + query->lastError().text();
+        if (!query->exec()){
+            status = "Error al Eliminar Concepto de Deducción: " + query->lastError().text();
+            debugMessage(status);
+            debugMessage(query->executedQuery());
+            return false;
+        }else {
+            status = "Concepto de Deducción Eliminado Exitosamente...";
+            debugMessage(status);
+            return true;
+        }
+    } else {
+        status = "Esta deduccion no puede ser Eliminada.";
         debugMessage(status);
-        debugMessage(query->executedQuery());
         return false;
-    }else {
-        status = "Concepto de Deducción Eliminado Exitosamente...";
-        debugMessage(status);
-        return true;
     }
 }
 

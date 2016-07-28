@@ -126,6 +126,25 @@ bool AnticipoModel::updateAnticipoDetalle(int id, QString cedula, bool procesado
     }
 }
 
+bool AnticipoModel::deleteAnticipo(int anticipoId)
+{
+    query->prepare("DELETE FROM "+TABLE_ANTICIPO+" WHERE id=:id");
+
+    query->bindValue(":id",anticipoId);
+
+    if (!query->exec())
+    {
+        status = "ERROR al Eliminar Anticipo. Error: " +query->lastError().text();
+        debugMessage(status);
+        return false;
+    } else
+    {
+        status = "Anticipo Eliminado exitosamente...";
+        debugMessage(status);
+        return true;
+    }
+}
+
 double AnticipoModel::calcAnticipo(Empleado emp, int dias, double porcentaje)
 {
     double anticipo = (emp.getSalarioDia() * dias) * (porcentaje/100);

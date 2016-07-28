@@ -36,6 +36,8 @@ private slots:
 
     void on_cargarNominaPushButton_clicked();
 
+    void on_prestacionGroupBox_toggled(bool arg1);
+
 private:
     Ui::NominaCargarDialog *ui;
     State state;

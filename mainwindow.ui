@@ -145,13 +145,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="procesarNomCargadaPushButton">
-            <property name="text">
-             <string>Procesar Nomina</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item row="0" column="0">
@@ -229,7 +222,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="CargarNomPushButton_2">
+           <widget class="QPushButton" name="generarAnticipoPushButton">
             <property name="text">
              <string>Generar Anticipo</string>
             </property>
@@ -243,7 +236,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="CargarNomPushButton_4">
+           <widget class="QPushButton" name="eliminarAnticipoPushButton">
             <property name="text">
              <string>Eliminar</string>
             </property>
