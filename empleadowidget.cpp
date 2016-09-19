@@ -148,12 +148,12 @@ void EmpleadoWidget::stateModificar()
 
     ui->datosPersTab->setEnabled(true);
     ui->infLabTab->setEnabled(true);
-   ui->fechaIngrDateEdit->setEnabled(true);
-   ui->cedulaLineEdit->setEnabled(false);
-   ui->nivelSupCheckBox->setEnabled(true);
-   ui->accionPushButton->setText("Modificar");
-   ui->accionPushButton->setVisible(true);
-   ui->tabWidget->setCurrentIndex(0);
+    ui->fechaIngrDateEdit->setEnabled(true);
+    ui->cedulaLineEdit->setEnabled(false);
+    ui->nivelSupCheckBox->setEnabled(true);
+    ui->accionPushButton->setText("Modificar");
+    ui->accionPushButton->setVisible(true);
+    ui->tabWidget->setCurrentIndex(0);
 
 }
 
