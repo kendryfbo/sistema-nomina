@@ -107,9 +107,10 @@ private:
     // FORMULAS
      double formulaSSO(double salario);
 
-     // SALARIO INTEGRAL Y SALARIO BASE
+     // SALARIO INTEGRAL, SALARIO BASE Y PAGO
      double getSalarioIntegralFromEmpleado(QString cedulaEmp, int nominaNum);
      double getSalarioBaseFromEmpleado(QString cedulaEmp,int nominaNum);
+     double getPagoFromEmpleado(QString cedulaEmp,int nominaNum);
 
      //REGISTRO DE APORTE DE PRESTACIONES SOCIALES
      bool insertAportePrestaciones();

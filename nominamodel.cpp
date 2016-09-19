@@ -400,6 +400,14 @@ bool NominaModel::procesarNomina(int nominaNum)
         rollBack();
         return false;
     }
+    // Se ejecuta primero para verificar que el salario del empleado sea mayor a 0
+    else if (!insertNominaProcesadaEmp(nominaNum))
+    {
+        status = "ERROR al Procesar Nomina: " + status;
+        debugMessage(status);
+        rollBack();
+        return false;
+    }
     else if (!insertDeduccionesProcesadas(nominaNum))
     {
         status = "ERROR al Procesar Nomina: " + status;
@@ -414,13 +422,7 @@ bool NominaModel::procesarNomina(int nominaNum)
         rollBack();
         return false;
     }
-    else if (!insertNominaProcesadaEmp(nominaNum))
-    {
-        status = "ERROR al Procesar Nomina: " + status;
-        debugMessage(status);
-        rollBack();
-        return false;
-    }
+
     else if (!deleteNominaCargada(nominaNum))
     {
             status = "ERROR al Procesar Nomina: " + status;
@@ -1135,16 +1137,28 @@ bool NominaModel::insertNominaProcesada(int numero)
 bool NominaModel::insertNominaProcesadaEmp(int numero)
 {
     QSqlQuery thisQuery =  findEmpleadosFromNominaCargadaDetalle(numero);
+
     while (thisQuery.next())
     {
-        query->prepare("INSERT INTO "+TABLE_NOMINAPROCESADAEMP+" ("
-                                                                 "numero,ced_emp,salariogeneral,salario) VALUES ("
-                                                                 ":numero,:ced_emp,:salariogeneral,:salario)");
+        QString cedula = thisQuery.value("ced_emp").toString();
+        double salarioGeneral = thisQuery.value("salariogeneral").toDouble();
+        double salario = thisQuery.value("salario").toDouble();
+
+        // Verificar si el pago de empleado es menor negativo
+        if (getPagoFromEmpleado(cedula,numero) < 0)
+        {
+            status = "Empleado cedula: "+ thisQuery.value("ced_emp").toString() + " Posee Salario NEGATIVO";
+            debugMessage(status);
+            return false;
+            break;
+        }
+
+        query->prepare("INSERT INTO "+TABLE_NOMINAPROCESADAEMP+"(numero,ced_emp,salariogeneral,salario) VALUES (:numero,:ced_emp,:salariogeneral,:salario)");
 
         query->bindValue(":numero",numero);
-        query->bindValue(":ced_emp",thisQuery.value("ced_emp").toString());
-        query->bindValue(":salariogeneral",thisQuery.value("salariogeneral").toDouble());
-        query->bindValue(":salario",thisQuery.value("salario").toDouble());
+        query->bindValue(":ced_emp",cedula);
+        query->bindValue(":salariogeneral",salarioGeneral);
+        query->bindValue(":salario",salario);
 
         if (!query->exec())
         {
@@ -1155,6 +1169,7 @@ bool NominaModel::insertNominaProcesadaEmp(int numero)
         }
 
     }
+
     status = "Empleados en Nomina Procesada insertados Exitosamente...";
     debugMessage(status);
     return true;
@@ -1275,5 +1290,24 @@ double NominaModel::getSalarioBaseFromEmpleado(QString cedulaEmp, int nominaNum)
     }
     double salarioBase = query->value("salario").toDouble();
     return salarioBase;
+}
+
+double NominaModel::getPagoFromEmpleado(QString cedulaEmp, int nominaNum)
+{
+    QSqlQuery thisQuery = *query;
+    thisQuery.prepare("SELECT pago FROM "+TABLE_NOMINACARGADADETALLERESUMVIEW+" WHERE cedula=:cedula AND numero=:numero");
+
+    thisQuery.bindValue(":cedula",cedulaEmp);
+    thisQuery.bindValue(":numero",nominaNum);
+
+
+    if (!thisQuery.exec())
+    {
+        status = "ERROR al buscar Pago de Empleado Cedula: "+cedulaEmp+" error: " + thisQuery.lastError().text();
+        debugMessage(status);
+        return 0;
+    }
+    thisQuery.next();
+    return thisQuery.value("pago").toDouble();
 }
 
