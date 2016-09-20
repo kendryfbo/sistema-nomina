@@ -2,6 +2,7 @@
 #define APORTEFAOVNOMINADIALOG_H
 
 #include <QDialog>
+#include "aportefaovmodel.h"
 
 namespace Ui {
 class aporteFaovNominaDialog;
@@ -15,8 +16,19 @@ public:
     explicit aporteFaovNominaDialog(QWidget *parent = 0);
     ~aporteFaovNominaDialog();
 
+private slots:
+
+
+
+    void on_aceptarPushButton_clicked();
+
 private:
     Ui::aporteFaovNominaDialog *ui;
+
+    AporteFaovModel* model;
+
+    bool validarDatos();
+
 };
 
 #endif // APORTEFAOVNOMINADIALOG_H

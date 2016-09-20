@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     anticipomodel.cpp \
     anticipolistadialog.cpp \
     aportefaovinsertdialog.cpp \
-    aportefaovnominadialog.cpp
+    aportefaovnominadialog.cpp \
+    aportefaovmodel.cpp
 
 HEADERS  += mainwindow.h \
     usuario.h \
@@ -92,7 +93,8 @@ HEADERS  += mainwindow.h \
     anticipomodel.h \
     anticipolistadialog.h \
     aportefaovinsertdialog.h \
-    aportefaovnominadialog.h
+    aportefaovnominadialog.h \
+    aportefaovmodel.h
 
 FORMS    += mainwindow.ui \
     nominawidget.ui \
