@@ -53,6 +53,8 @@ SOURCES += main.cpp\
     aportefaovinsertdialog.cpp \
     aportefaovnominadialog.cpp \
     aportefaovmodel.cpp
+    vacacion.cpp \
+    vacacionmodel.cpp
 
 HEADERS  += mainwindow.h \
     usuario.h \
@@ -95,6 +97,8 @@ HEADERS  += mainwindow.h \
     aportefaovinsertdialog.h \
     aportefaovnominadialog.h \
     aportefaovmodel.h
+    vacacion.h \
+    vacacionmodel.h
 
 FORMS    += mainwindow.ui \
     nominawidget.ui \
