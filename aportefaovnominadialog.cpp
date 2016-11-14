@@ -13,7 +13,6 @@ aporteFaovNominaDialog::aporteFaovNominaDialog(QWidget *parent) :
         this->close();
     }
     model->setDebug(true);
-    prepareWidget();
 }
 
 aporteFaovNominaDialog::~aporteFaovNominaDialog()

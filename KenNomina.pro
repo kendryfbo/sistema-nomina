@@ -52,7 +52,7 @@ SOURCES += main.cpp\
     anticipolistadialog.cpp \
     aportefaovinsertdialog.cpp \
     aportefaovnominadialog.cpp \
-    aportefaovmodel.cpp
+    aportefaovmodel.cpp \
     vacacion.cpp \
     vacacionmodel.cpp
 
@@ -96,7 +96,7 @@ HEADERS  += mainwindow.h \
     anticipolistadialog.h \
     aportefaovinsertdialog.h \
     aportefaovnominadialog.h \
-    aportefaovmodel.h
+    aportefaovmodel.h \
     vacacion.h \
     vacacionmodel.h
 

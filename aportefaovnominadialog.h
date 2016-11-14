@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "aportefaovmodel.h"
-
+#include <QMessageBox>
 namespace Ui {
 class aporteFaovNominaDialog;
 }
