@@ -85,7 +85,6 @@ bool AnticipoModel::insertAnticipoDetalle(int id,QString cedula, double monto)
 {
     query->prepare("INSERT INTO "+TABLE_ANTICIPODETALLE+" (id,cedula,monto,procesado) VALUES "
                                                              "(:id,:cedula,:monto,:procesado)");
-
     query->bindValue(":id",id);
     query->bindValue(":cedula",cedula);
     query->bindValue(":monto",monto);
@@ -245,7 +244,7 @@ bool AnticipoModel::insertAnticipo(QString descripcion,QString area,int dias,dou
         while (tempQuery.next())
         {
            QString cedula = tempQuery.value("cedula").toString();
-           double monto = tempQuery.value("monto").toInt();
+           double monto = tempQuery.value("monto").toDouble();
            if (!insertAnticipoDetalle(idAnticipo,cedula,monto))
            {
                return false;
