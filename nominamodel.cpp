@@ -1019,7 +1019,7 @@ bool NominaModel::insertAsignacionCargada(Asignacion &asignacion, Empleado &empl
     }
     else if (forma == "PORCENTAJE SALARIO")
     {
-        double pago = getSalarioIntegralFromEmpleado(empleado.getCedula(),nominaNum);
+        double pago = getSalarioBaseFromEmpleado(empleado.getCedula(),nominaNum);
         valor = pago * (asignacion.getValor()/100);
     }
     else  if (forma == "FORMULA")
@@ -1277,7 +1277,7 @@ double NominaModel::getSalarioIntegralFromEmpleado(QString cedulaEmp, int nomina
 
 double NominaModel::getSalarioBaseFromEmpleado(QString cedulaEmp, int nominaNum)
 {
-    query->prepare("SELECT salariogeneral FROM "+TABLE_NOMINACARGADADETALLE+" WHERE cedula=:cedula AND numero=:numero");
+    query->prepare("SELECT salario FROM "+TABLE_NOMINACARGADADETALLERESUMVIEW+" WHERE cedula=:cedula AND numero=:numero");
 
     query->bindValue(":cedula",cedulaEmp);
     query->bindValue(":numero",nominaNum);
@@ -1285,6 +1285,10 @@ double NominaModel::getSalarioBaseFromEmpleado(QString cedulaEmp, int nominaNum)
     if (!query->exec())
     {
         status = "ERROR al buscar Salario Base de Empleado Cedula: "+cedulaEmp+" error: " + query->lastError().text();
+        debugMessage(status);
+        return 0;
+    } else if (!query->next()){
+        status = "No se encontro Salario Base de Empleado Cedula: "+cedulaEmp;
         debugMessage(status);
         return 0;
     }
