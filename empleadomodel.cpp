@@ -520,8 +520,13 @@ Clasificacion EmpleadoModel::findClasificacion(QString codigo)
 
 QSqlQuery EmpleadoModel::findClasificaciones(QString area)
 {
-    query->prepare("SELECT * FROM "+TABLE_CLASIFIC+" WHERE cod_area=:area AND activo=true");
-    query->bindValue(":area",area);
+    // si area == "" se realiza la busqueda de clasificaciones sin area
+    if (area == "") {
+        query->prepare("SELECT * FROM "+TABLE_CLASIFIC+" WHERE activo=true");
+    } else {
+        query->prepare("SELECT * FROM "+TABLE_CLASIFIC+" WHERE cod_area=:area AND activo=true");
+        query->bindValue(":area",area);
+    }
 
     if (!query->exec())
     {

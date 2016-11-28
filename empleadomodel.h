@@ -53,7 +53,8 @@ public:
 
     QSqlQuery findAreas();
     Clasificacion findClasificacion(QString codigo);
-    QSqlQuery findClasificaciones(QString area);
+    // permite buscar clasificaciones por area o en generales
+    QSqlQuery findClasificaciones(QString area = "");
 
 
     // MODULO - REGISTRO DE APORTE DE PRESTACIONES SOCIALES
