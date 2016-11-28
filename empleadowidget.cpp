@@ -458,7 +458,9 @@ void EmpleadoWidget::updateCamposComboBox()
 void EmpleadoWidget::updateClasificacionComboBox()
 {
     QString area = campoModel->record(ui->CampoComboBox->currentIndex()).value("codigo").toString();
-    clasificModel->setQuery(model->findClasificaciones(area));
+    //se realiza la busqueda de clasificacion sin area ya que ahora una
+    //clasificacion puede pertenecer a diferentes areas
+    clasificModel->setQuery(model->findClasificaciones());
     ui->clasifcComboBox->setModel(clasificModel);
     ui->clasifcComboBox->setModelColumn(1);
     updateFormaPago();
