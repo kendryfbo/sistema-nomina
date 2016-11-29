@@ -327,6 +327,7 @@ void EmpleadoWidget::cargarAporteFaovEmpleado()
 Empleado EmpleadoWidget::descargarEmpleado()
 {
     QString codigoClasif = clasificModel->record(ui->clasifcComboBox->currentIndex()).value("codigo").toString();
+    QString codigoArea = campoModel->record(ui->CampoComboBox->currentIndex()).value("codigo").toString();
     Clasificacion clasificacion(model->findClasificacion(codigoClasif));
     empleado = Empleado(
                 ui->cedulaLineEdit->text(),
@@ -349,7 +350,7 @@ Empleado EmpleadoWidget::descargarEmpleado()
                 "2016-10-10",
                 ui->fechaIngrDateEdit->date().toString("yyyy-MM-dd"),
                 ui->statusComboBox->currentText(),
-                clasificacion.getArea(),
+                codigoArea,
                 clasificacion,
                 ui->nivelAcadLineEdit->text(),
                 ui->HorasSpinBox->value(),
